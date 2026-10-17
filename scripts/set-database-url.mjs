@@ -14,25 +14,36 @@ function readSecret(prompt) {
       process.stdin.on("end", () => resolve(data.split(/\r?\n/)[0].trim()));
     });
   }
+  // Interactive: read raw keystrokes so nothing is echoed and the prompt stays visible.
   return new Promise((resolve) => {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    const write = rl._writeToOutput.bind(rl);
-    let muted = false;
-    rl._writeToOutput = (s) => {
-      if (!muted) write(s);
-    };
+    let secret = "";
     process.stdout.write(prompt);
-    muted = true;
-    rl.question("", (answer) => {
-      muted = false;
-      rl.close();
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+    const finish = () => {
+      process.stdin.setRawMode(false);
+      process.stdin.pause();
+      process.stdin.off("data", onData);
       process.stdout.write("\n");
-      resolve(answer.trim());
-    });
+      resolve(secret.trim());
+    };
+    const onData = (chunk) => {
+      for (const ch of chunk) {
+        if (ch === "\r" || ch === "\n") return finish();
+        if (ch === "\u0003") {
+          process.stdout.write("\n");
+          process.exit(130); // Ctrl+C
+        }
+        if (ch === "\u007f" || ch === "\b") secret = secret.slice(0, -1);
+        else if (ch >= " ") secret += ch;
+      }
+    };
+    process.stdin.on("data", onData);
   });
 }
 
-const value = await readSecret("Paste the Neon connection string (nothing will show), then press Enter: ");
+const value = await readSecret("Paste the Neon connection string (nothing will show), then press Enter:\n> ");
 
 if (!/^postgres(ql)?:\/\/[^\s"']+$/.test(value)) {
   console.error("That does not look like a Postgres connection string (it should start with postgresql://). Nothing was saved.");

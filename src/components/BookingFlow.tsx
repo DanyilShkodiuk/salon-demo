@@ -152,6 +152,10 @@ export default function BookingFlow({ services }: { services: Service[] }) {
       noValidate
       className="self-start rounded-[2rem] bg-panel p-6 sm:p-8 lg:sticky lg:top-24"
     >
+      <p className="mb-6 rounded-2xl bg-lilac-soft px-4 py-3 text-sm">
+        This is a demo. Please use made-up details, not your real name, email or phone number.
+      </p>
+
       <fieldset>
         <legend className="heading text-3xl">Choose a service</legend>
         <div role="radiogroup" className="mt-4 grid gap-2 sm:grid-cols-2">
