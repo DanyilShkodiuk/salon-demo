@@ -2,6 +2,14 @@
 
 Online booking for a small salon. Customers pick a service, a day and a free time. The owner confirms or cancels bookings in a password-protected admin page.
 
+**Live demo:** [salon-demo-ruby.vercel.app](https://salon-demo-ruby.vercel.app) · **Admin panel:** [/admin](https://salon-demo-ruby.vercel.app/admin), press **Enter demo admin** (no password needed in the demo)
+
+<p>
+  <img src="docs/screenshots/mobile-home.png" alt="Home page on a phone" width="240">
+  <img src="docs/screenshots/mobile-booking.png" alt="Choosing a day and a free time on a phone" width="240">
+</p>
+<img src="docs/screenshots/admin.png" alt="Admin panel with upcoming bookings" width="740">
+
 **Stack:** Next.js 15 (App Router, TypeScript), Tailwind CSS 4, Drizzle ORM, Neon Postgres, Zod, Vitest.
 
 ## Run locally
@@ -13,6 +21,10 @@ npm run dev
 ```
 
 Without `DATABASE_URL`, development uses an in-memory store (data resets on restart). Production refuses to start without a database.
+
+## Demo mode
+
+Set `DEMO_MODE=true` for a public demo. The admin login page then shows an **Enter demo admin** button instead of the password form, surnames and contacts are masked in the admin list, and sample bookings are added whenever nothing is upcoming. `ADMIN_PASSWORD` and `ADMIN_SECRET` are still required. Leave `DEMO_MODE` empty for a real salon. Visitors can still type anything into the booking note, so keep the demo database separate from real data.
 
 ## Connect Neon
 
