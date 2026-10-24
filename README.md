@@ -22,10 +22,20 @@ Without `DATABASE_URL`, development uses an in-memory store (data resets on rest
 4. Check the connection: `npm run db:check` (prints whether the table exists and how many bookings it holds)
 5. Start the app: `npm run dev`. Bookings now persist across restarts.
 
+## Email notifications
+
+Each new booking emails the owner (with the customer's details and a reply-to set to the customer, when they left an email). If the customer left an email, they also get a short "we received your booking" note. Emails go through [Resend](https://resend.com) and are sent after the response, so a slow or failing mail provider never blocks or breaks a booking.
+
+1. Create a Resend account and an API key.
+2. Add to `.env.local` (and to the Vercel project settings): `RESEND_API_KEY`, `NOTIFY_FROM`, `NOTIFY_OWNER_EMAIL`.
+3. For a quick test, `NOTIFY_FROM="Luna Hair Studio <onboarding@resend.dev>"` works, but Resend then only delivers to your own account's email. To email customers, verify the salon's domain in Resend and send from it.
+
+With any of the three variables empty, emails are skipped and bookings work as before.
+
 ## Checks
 
 ```bash
-npm test          # slot logic, validation, auth, and SQL on a real Postgres engine (PGlite)
+npm test          # slot logic, validation, auth, emails, and SQL on a real Postgres engine (PGlite)
 npm run typecheck
 npm run build
 ```
@@ -36,7 +46,7 @@ The API re-checks the chosen time on submit, then inserts with a single SQL stat
 
 ## Not included yet
 
-Email notifications, the client project brief form with AI planning, and the Cloudflare deployment config are the next stages.
+The client project brief form with AI planning, and the Cloudflare deployment config are the next stages.
 
 ## Design notes
 
