@@ -12,6 +12,7 @@ import {
   verifySession,
 } from "@/lib/auth";
 import { getStore } from "@/lib/db";
+import { isDemo } from "@/lib/demo";
 
 export async function login(_prev: { error: string } | undefined, formData: FormData) {
   if (!adminConfigured()) {
@@ -22,6 +23,16 @@ export async function login(_prev: { error: string } | undefined, formData: Form
     await new Promise((r) => setTimeout(r, 600)); // slow down guessing
     return { error: "Wrong password." };
   }
+  await startSession();
+}
+
+/** One-click sign-in for the public demo. Does nothing unless DEMO_MODE is on. */
+export async function demoLogin() {
+  if (!isDemo() || !adminConfigured()) redirect("/admin");
+  await startSession();
+}
+
+async function startSession() {
   const jar = await cookies();
   jar.set(ADMIN_COOKIE, await createSession(), {
     httpOnly: true,
