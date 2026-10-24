@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { getService } from "@/lib/config";
 import { getStore } from "@/lib/db";
+import { notifyNewBooking } from "@/lib/notify";
 import { dateProblem, isSlotFree } from "@/lib/slots";
 import { formatMinute, localNow } from "@/lib/time";
 import { bookingInput } from "@/lib/validation";
@@ -61,6 +62,9 @@ export async function POST(request: Request) {
       { status: 409 },
     );
   }
+
+  // Send emails after the response so a slow mail provider never delays the customer.
+  after(() => notifyNewBooking(created));
 
   return NextResponse.json(
     {
