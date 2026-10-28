@@ -89,7 +89,7 @@ Each new booking emails the owner (with the customer's details and a reply-to se
 2. Add to `.env.local` (and to the Vercel project settings): `RESEND_API_KEY`, `NOTIFY_FROM`, `NOTIFY_OWNER_EMAIL`.
 3. For a quick test, `NOTIFY_FROM="Luna Hair Studio <onboarding@resend.dev>"` works, but Resend then only delivers to your own account's email. To email customers, verify the salon's domain in Resend and send from it.
 
-With any of the three variables empty, emails are skipped and bookings work as before.
+With any of the three variables empty, emails are skipped and bookings work as before. With `DEMO_MODE` on, only the owner is emailed, so visitors of the public demo cannot make the salon send email to an address they type.
 
 ### Checks
 

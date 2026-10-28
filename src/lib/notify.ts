@@ -1,11 +1,18 @@
 import type { BookingRow } from "@/db/schema";
 import { SALON } from "./config";
+import { isDemo } from "./demo";
 import { formatMinute } from "./time";
 
 const RESEND_URL = "https://api.resend.com/emails";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export type NotifyConfig = { apiKey: string; from: string; ownerTo: string };
+export type NotifyConfig = {
+  apiKey: string;
+  from: string;
+  ownerTo: string;
+  /** Off in the public demo, so strangers cannot make the salon email any address they type. */
+  emailCustomers: boolean;
+};
 
 type Email = { to: string; subject: string; text: string; html: string; replyTo?: string };
 
@@ -15,7 +22,7 @@ export function notifyConfig(env = process.env): NotifyConfig | null {
   const from = env.NOTIFY_FROM;
   const ownerTo = env.NOTIFY_OWNER_EMAIL;
   if (!apiKey || !from || !ownerTo) return null;
-  return { apiKey, from, ownerTo };
+  return { apiKey, from, ownerTo, emailCustomers: !isDemo(env) };
 }
 
 function escapeHtml(s: string): string {
@@ -43,8 +50,8 @@ function render(intro: string, rows: [string, string][], outro: string) {
   return { text, html };
 }
 
-/** The emails a new booking triggers: one to the owner, one to the customer if they gave an email. */
-export function bookingEmails(b: BookingRow, ownerTo: string): Email[] {
+/** The emails a new booking triggers: one to the owner, one to the customer if they gave an email (and customer emails are on). */
+export function bookingEmails(b: BookingRow, ownerTo: string, emailCustomers = true): Email[] {
   const when = `${b.date} ${formatMinute(b.startMinute)}`;
   const customerEmail = EMAIL_RE.test(b.contact) ? b.contact : undefined;
   const emails: Email[] = [
@@ -59,7 +66,7 @@ export function bookingEmails(b: BookingRow, ownerTo: string): Email[] {
       ),
     },
   ];
-  if (customerEmail) {
+  if (customerEmail && emailCustomers) {
     emails.push({
       to: customerEmail,
       subject: `${SALON.name}: we got your booking for ${when}`,
@@ -83,7 +90,7 @@ export async function notifyNewBooking(
   fetchFn: typeof fetch = fetch,
 ): Promise<void> {
   if (!config) return;
-  for (const email of bookingEmails(b, config.ownerTo)) {
+  for (const email of bookingEmails(b, config.ownerTo, config.emailCustomers)) {
     // The customer replies to the owner; the owner replies to the customer.
     const replyTo = email.replyTo ?? config.ownerTo;
     try {

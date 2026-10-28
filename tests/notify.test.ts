@@ -16,7 +16,12 @@ const booking: BookingRow = {
   createdAt: new Date(),
 };
 
-const config = { apiKey: "re_test", from: "Salon <hi@salon.test>", ownerTo: "owner@salon.test" };
+const config = {
+  apiKey: "re_test",
+  from: "Salon <hi@salon.test>",
+  ownerTo: "owner@salon.test",
+  emailCustomers: true,
+};
 
 describe("notifyConfig", () => {
   it("is null unless key, sender and owner address are all set", () => {
@@ -24,7 +29,12 @@ describe("notifyConfig", () => {
     expect(notifyConfig({ RESEND_API_KEY: "k", NOTIFY_FROM: "f" } as never)).toBeNull();
     expect(
       notifyConfig({ RESEND_API_KEY: "k", NOTIFY_FROM: "f", NOTIFY_OWNER_EMAIL: "o@x.io" } as never),
-    ).toEqual({ apiKey: "k", from: "f", ownerTo: "o@x.io" });
+    ).toEqual({ apiKey: "k", from: "f", ownerTo: "o@x.io", emailCustomers: true });
+  });
+
+  it("turns customer emails off in the public demo", () => {
+    const env = { RESEND_API_KEY: "k", NOTIFY_FROM: "f", NOTIFY_OWNER_EMAIL: "o@x.io", DEMO_MODE: "true" };
+    expect(notifyConfig(env as never)?.emailCustomers).toBe(false);
   });
 });
 
@@ -43,6 +53,12 @@ describe("bookingEmails", () => {
     const emails = bookingEmails({ ...booking, contact: "+48 600 100 200" }, config.ownerTo);
     expect(emails.map((e) => e.to)).toEqual(["owner@salon.test"]);
     expect(emails[0].replyTo).toBeUndefined();
+  });
+
+  it("emails only the owner when customer emails are off", () => {
+    const emails = bookingEmails(booking, config.ownerTo, false);
+    expect(emails.map((e) => e.to)).toEqual(["owner@salon.test"]);
+    expect(emails[0].replyTo).toBe("anna@example.com");
   });
 
   it("escapes customer text in HTML", () => {
