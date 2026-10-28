@@ -1,8 +1,14 @@
 # Luna Hair Studio: online booking for a small salon
 
-**Live demo:** [salon-demo-ruby.vercel.app](https://salon-demo-ruby.vercel.app)
+**Live demo:** [salon-demo-ruby.vercel.app](https://salon-demo-ruby.vercel.app) · **Admin panel:** [/admin](https://salon-demo-ruby.vercel.app/admin), press **Enter demo admin** (no password needed in the demo)
 
 A website where a salon's customers book an appointment themselves, any time of day, and the owner confirms it with one click. Luna Hair Studio is a sample salon; the names, prices and shades are demo data, and the site is built to be adapted to a real business.
+
+<p>
+  <img src="docs/screenshots/mobile-home.png" alt="Home page on a phone" width="240">
+  <img src="docs/screenshots/mobile-booking.png" alt="Choosing a day and a free time on a phone" width="240">
+</p>
+<img src="docs/screenshots/admin.png" alt="Admin panel with upcoming bookings" width="740">
 
 ## The problem
 
@@ -62,6 +68,10 @@ npm run dev
 ```
 
 Without `DATABASE_URL`, development uses an in-memory store (data resets on restart). Production refuses to start without a database.
+
+### Demo mode
+
+Set `DEMO_MODE=true` for a public demo. The admin login page then shows an **Enter demo admin** button instead of the password form, surnames and contacts are masked in the admin list, and sample bookings are added whenever nothing is upcoming. `ADMIN_PASSWORD` and `ADMIN_SECRET` are still required. Leave `DEMO_MODE` empty for a real salon. Visitors can still type anything into the booking note, so keep the demo database separate from real data.
 
 ### Connect Neon
 
