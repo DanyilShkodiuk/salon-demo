@@ -61,7 +61,7 @@ export default function NextFreeBadge({ serviceId, serviceName }: { serviceId: s
         window.dispatchEvent(new CustomEvent("select-service", { detail: serviceId }));
         document.getElementById("book")?.scrollIntoView({ behavior: "smooth" });
       }}
-      className="fade-in inline-flex h-10 items-center gap-2.5 rounded-full border border-rule bg-panel px-4 text-sm transition-colors hover:border-sage"
+      className="fade-in inline-flex h-10 items-center gap-2.5 surface rounded-full px-4 text-sm transition-colors hover:border-sage"
     >
       <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sage opacity-60" />
