@@ -14,7 +14,7 @@ export default function DemoLoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-4 rounded-full bg-sage px-6 py-3 font-semibold text-white transition-colors hover:bg-sage-deep disabled:opacity-50"
+        className="mt-4 rounded-full bg-sage px-6 py-3 font-semibold text-on-sage transition-colors hover:bg-sage-deep disabled:opacity-50"
       >
         {pending ? "Opening…" : "Enter demo admin"}
       </button>
