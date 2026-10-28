@@ -2,6 +2,7 @@ import Link from "next/link";
 import BookingFlow from "@/components/BookingFlow";
 import Crescent from "@/components/Crescent";
 import CountUp from "@/components/CountUp";
+import MobileMenu from "@/components/MobileMenu";
 import NextFreeBadge from "@/components/NextFreeBadge";
 import ScrollReveal from "@/components/ScrollReveal";
 import ServiceFinder from "@/components/ServiceFinder";
@@ -46,7 +47,7 @@ export default function Home() {
             <span className="heading text-2xl leading-none">Luna</span>
             <span className="eyebrow hidden pt-1 text-muted min-[400px]:inline">Hair Studio</span>
           </a>
-          <div className="flex shrink-0 items-center gap-3 text-sm md:gap-6">
+          <div className="flex shrink-0 items-center gap-2 text-sm min-[400px]:gap-3 md:gap-6">
             {NAV.map(([label, href]) => (
               <a key={href} href={href} className="hidden text-muted hover:text-ink lg:inline">
                 {label}
@@ -55,10 +56,11 @@ export default function Home() {
             <ThemeToggle />
             <a
               href="#book"
-              className="rounded-full bg-sage px-5 py-2.5 font-semibold text-on-sage transition-colors hover:bg-sage-deep"
+              className="rounded-full bg-sage px-4 py-2.5 font-semibold text-on-sage transition-colors hover:bg-sage-deep min-[400px]:px-5"
             >
               Book a time
             </a>
+            <MobileMenu links={NAV} />
           </div>
         </nav>
       </header>
