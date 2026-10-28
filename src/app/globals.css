@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* `dark:` utilities follow the theme set on <html> by the script in layout.tsx. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* Calm, warm neutrals with a muted sage accent. Contrast pairs checked for WCAG AA:
    ink/muted on cream and panel, white on sage, cream on ink. */
 @theme {
@@ -14,7 +17,12 @@
   --color-sage-deep: #434e3d;
   --color-sage-soft: #e6eadf;
   --color-gold: #b38f63;
+  --color-on-sage: #ffffff;
+  --color-field: #ffffff;
+  --color-night: #2b2521;
+  --color-night-text: #f7f3ed;
   --color-alert: #9b3b2f;
+  --color-alert-soft: #f3dedb;
   --color-success: #3f6446;
   --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     sans-serif;
@@ -22,10 +30,61 @@
     serif;
 }
 
+/* Dark theme: the same warm palette, lowered into espresso tones. The sage accent turns
+   lighter, so text on it turns dark. Applied when the visitor picks it, or by default when
+   their system is dark (the media query covers the moment before the theme script runs). */
+:root[data-theme="dark"] {
+  --color-ink: #ede6dc;
+  --color-cream: #1b1815;
+  --color-panel: #23201b;
+  --color-sand: #2a2520;
+  --color-sand-deep: #3a332b;
+  --color-rule: #39332c;
+  --color-muted: #b3a798;
+  --color-sage: #9aab8e;
+  --color-sage-deep: #b2c1a6;
+  --color-sage-soft: #2c3329;
+  --color-gold: #cdab7f;
+  --color-on-sage: #1b1815;
+  --color-field: #1e1b17;
+  --color-night: #131110;
+  --color-night-text: #ede6dc;
+  --color-alert: #e8948a;
+  --color-alert-soft: #3d2622;
+  --color-success: #a7c8a9;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-ink: #ede6dc;
+    --color-cream: #1b1815;
+    --color-panel: #23201b;
+    --color-sand: #2a2520;
+    --color-sand-deep: #3a332b;
+    --color-rule: #39332c;
+    --color-muted: #b3a798;
+    --color-sage: #9aab8e;
+    --color-sage-deep: #b2c1a6;
+    --color-sage-soft: #2c3329;
+    --color-gold: #cdab7f;
+    --color-on-sage: #1b1815;
+    --color-field: #1e1b17;
+    --color-night: #131110;
+    --color-night-text: #ede6dc;
+    --color-alert: #e8948a;
+    --color-alert-soft: #3d2622;
+    --color-success: #a7c8a9;
+    color-scheme: dark;
+  }
+}
+
 html {
-  color-scheme: light;
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
+}
+
+html:not([data-theme="dark"]) {
+  color-scheme: light;
 }
 
 body {
@@ -88,11 +147,35 @@ body {
   animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+/* Scrollable rows that still swipe but show no scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fills the active carousel dot while the current card is on show. */
+@keyframes carousel-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+.carousel-progress {
+  animation-name: carousel-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .rise {
+  .rise,
+  .carousel-progress {
     animation: none;
   }
   * {

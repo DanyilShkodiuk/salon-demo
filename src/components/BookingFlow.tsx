@@ -7,7 +7,7 @@ type Slot = { startMinute: number; label: string };
 type Done = { service: string; date: string; time: string };
 
 const field =
-  "w-full rounded-xl border border-rule bg-white px-4 py-3 text-base text-ink transition-colors placeholder:text-muted/70 hover:border-sand-deep focus:border-sage aria-[invalid=true]:border-alert";
+  "w-full rounded-xl border border-rule bg-field px-4 py-3 text-base text-ink transition-colors placeholder:text-muted/70 hover:border-sand-deep focus:border-sage aria-[invalid=true]:border-alert";
 
 function todayLocal(): string {
   const d = new Date();
@@ -139,7 +139,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
         </p>
         <button
           onClick={reset}
-          className="mt-8 rounded-full bg-sage px-6 py-3 font-semibold text-white transition-colors hover:bg-sage-deep"
+          className="mt-8 rounded-full bg-sage px-6 py-3 font-semibold text-on-sage transition-colors hover:bg-sage-deep"
         >
           Book another appointment
         </button>
@@ -174,7 +174,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
                 className={`rounded-2xl border p-4 text-left transition-colors ${
                   selected
                     ? "border-sage bg-sage-soft ring-1 ring-sage"
-                    : "border-rule bg-white hover:border-sage"
+                    : "border-rule bg-field hover:border-sage"
                 }`}
               >
                 <span className="flex items-baseline justify-between gap-2">
@@ -221,8 +221,8 @@ export default function BookingFlow({ services }: { services: Service[] }) {
                   onClick={() => setStartMinute(s.startMinute)}
                   className={`min-w-[4.75rem] rounded-full border px-4 py-2.5 text-sm font-semibold tabular-nums transition-colors ${
                     startMinute === s.startMinute
-                      ? "border-sage bg-sage text-white"
-                      : "border-rule bg-white hover:border-sage"
+                      ? "border-sage bg-sage text-on-sage"
+                      : "border-rule bg-field hover:border-sage"
                   }`}
                 >
                   {s.label}
@@ -313,7 +313,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
           <button
             type="submit"
             disabled={!canSubmit || submitting}
-            className="mt-4 rounded-full bg-sage px-7 py-3.5 font-semibold text-white transition-colors hover:bg-sage-deep disabled:cursor-not-allowed disabled:opacity-40"
+            className="mt-4 rounded-full bg-sage px-7 py-3.5 font-semibold text-on-sage transition-colors hover:bg-sage-deep disabled:cursor-not-allowed disabled:opacity-40"
           >
             {submitting ? "Sending…" : "Request this time"}
           </button>

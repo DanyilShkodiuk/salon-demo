@@ -3,6 +3,7 @@ import BookingFlow from "@/components/BookingFlow";
 import Crescent from "@/components/Crescent";
 import ServiceTiles from "@/components/ServiceTiles";
 import ShadeCard from "@/components/ShadeCard";
+import ThemeToggle from "@/components/ThemeToggle";
 import { SALON, SERVICES } from "@/lib/config";
 import { formatMinute } from "@/lib/time";
 
@@ -37,7 +38,7 @@ export default function Home() {
             <span className="heading text-2xl leading-none">Luna</span>
             <span className="eyebrow hidden pt-1 text-muted min-[400px]:inline">Hair Studio</span>
           </a>
-          <div className="flex shrink-0 items-center gap-6 text-sm">
+          <div className="flex shrink-0 items-center gap-3 text-sm md:gap-6">
             {NAV.map(([label, href]) => (
               <a key={href} href={href} className="hidden text-muted hover:text-ink md:inline">
                 {label}
@@ -46,9 +47,10 @@ export default function Home() {
             <Link href="/admin" className="hidden text-muted hover:text-ink md:inline">
               Staff login
             </Link>
+            <ThemeToggle />
             <a
               href="#book"
-              className="rounded-full bg-sage px-5 py-2.5 font-semibold text-white transition-colors hover:bg-sage-deep"
+              className="rounded-full bg-sage px-5 py-2.5 font-semibold text-on-sage transition-colors hover:bg-sage-deep"
             >
               Book a time
             </a>
@@ -70,7 +72,7 @@ export default function Home() {
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <a
                 href="#book"
-                className="rounded-full bg-sage px-7 py-3.5 font-semibold text-white transition-colors hover:bg-sage-deep"
+                className="rounded-full bg-sage px-7 py-3.5 font-semibold text-on-sage transition-colors hover:bg-sage-deep"
               >
                 Book an appointment
               </a>
@@ -98,7 +100,7 @@ export default function Home() {
           <div aria-hidden="true" className="relative mx-auto w-full max-w-sm lg:max-w-none">
             <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2rem] bg-gradient-to-b from-sand-deep via-sand to-sage-soft">
               <div className="absolute inset-5 rounded-t-[999px] rounded-b-[1.5rem] border border-panel/80" />
-              <Crescent className="absolute left-1/2 top-[22%] h-[38%] w-[38%] -translate-x-1/2 text-panel/90" />
+              <Crescent className="absolute left-1/2 top-[22%] h-[38%] w-[38%] -translate-x-1/2 text-panel/90 dark:text-gold/70" />
               <p className="display absolute inset-x-0 bottom-[14%] px-8 text-center text-3xl italic text-ink/80 sm:text-4xl">
                 Every visit starts with a conversation.
               </p>
@@ -195,13 +197,13 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="on-dark bg-ink text-cream">
+      <footer className="on-dark bg-night text-night-text">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-10 text-sm sm:px-8">
           <span className="flex items-center gap-2.5">
             <Crescent className="h-5 w-5 text-gold" />
             <span className="heading text-xl">Luna Hair Studio</span>
           </span>
-          <span className="text-cream/70">
+          <span className="text-night-text/70">
             Demo project by Danyil Shkodiuk. Names, prices and shades are sample data.
           </span>
           <Link href="/admin" className="underline underline-offset-4">

@@ -14,7 +14,7 @@ export const metadata = { title: "Bookings | Luna Hair Studio", robots: { index:
 const STATUS_STYLE: Record<string, string> = {
   pending: "bg-sand text-ink",
   confirmed: "bg-sage-soft text-success",
-  cancelled: "bg-[#f3dedb] text-alert line-through",
+  cancelled: "bg-alert-soft text-alert line-through",
 };
 
 export default async function AdminPage() {

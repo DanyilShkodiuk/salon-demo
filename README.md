@@ -7,6 +7,7 @@ A website where a salon's customers book an appointment themselves, any time of 
 <p>
   <img src="docs/screenshots/mobile-home.png" alt="Home page on a phone" width="240">
   <img src="docs/screenshots/mobile-booking.png" alt="Choosing a day and a free time on a phone" width="240">
+  <img src="docs/screenshots/mobile-home-dark.png" alt="Home page in the dark theme" width="240">
 </p>
 <img src="docs/screenshots/admin.png" alt="Admin panel with upcoming bookings" width="740">
 
@@ -109,7 +110,7 @@ Salon name, timezone, opening hours, slot step, booking window and the service l
 
 ### Design notes
 
-Style: calm, editorial minimalism with plenty of white space. Palette: warm cream `#f7f3ed` and sand `#efe7dc` surfaces, espresso ink `#2b2521`, muted sage `#56634f` for calls to action and the selected time, with a soft gold `#b38f63` for small accents. Fonts: Cormorant Garamond for headings and Manrope for text (both variable, self-hosted via `@fontsource-variable`). Both cover Latin, Latin Extended (Polish) and Cyrillic (Ukrainian), so the site is ready for localisation.
+Style: calm, editorial minimalism with plenty of white space. Palette: warm cream `#f7f3ed` and sand `#efe7dc` surfaces, espresso ink `#2b2521`, muted sage `#56634f` for calls to action and the selected time, with a soft gold `#b38f63` for small accents. Fonts: Cormorant Garamond for headings and Manrope for text (both variable, self-hosted via `@fontsource-variable`). Both cover Latin, Latin Extended (Polish) and Cyrillic (Ukrainian), so the site is ready for localisation. A dark theme follows the visitor's system setting, and a button in the header switches it by hand (the choice is remembered on the device). The services section is a carousel that moves on its own every few seconds, pauses on hover or focus, has a stop button, and stays still for visitors who ask their system for reduced motion.
 
 ### Not included yet
 
