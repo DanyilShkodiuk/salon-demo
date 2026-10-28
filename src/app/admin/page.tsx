@@ -5,7 +5,8 @@ import { getStore } from "@/lib/db";
 import { ensureDemoData, isDemo, maskContact, maskName } from "@/lib/demo";
 import { formatMinute, localNow } from "@/lib/time";
 import LoginForm from "./LoginForm";
-import { demoLogin, logout, setStatus } from "./actions";
+import DemoLoginForm from "./DemoLoginForm";
+import { logout, setStatus } from "./actions";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Bookings | Luna Hair Studio", robots: { index: false } };
@@ -26,17 +27,7 @@ export default async function AdminPage() {
       <main className="mx-auto max-w-3xl px-5 py-16">
         <h1 className="heading text-5xl">Staff login</h1>
         <p className="mt-3 text-muted">Sign in to see and confirm bookings.</p>
-        {demo && (
-          <form action={demoLogin} className="mt-6 max-w-sm rounded-[1.5rem] bg-lilac-soft p-5">
-            <p className="font-semibold">Just looking around?</p>
-            <p className="mt-1 text-sm">
-              This is a public demo. Open the admin panel without a password. Contacts are hidden.
-            </p>
-            <button className="mt-4 rounded-full bg-marigold px-6 py-3 font-medium text-plum hover:brightness-95">
-              Enter demo admin
-            </button>
-          </form>
-        )}
+        {demo && <DemoLoginForm />}
         {!demo && <LoginForm />}
         <Link href="/" className="mt-10 inline-block text-sm underline underline-offset-4">
           Back to booking page

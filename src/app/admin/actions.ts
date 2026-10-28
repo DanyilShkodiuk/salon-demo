@@ -27,8 +27,14 @@ export async function login(_prev: { error: string } | undefined, formData: Form
 }
 
 /** One-click sign-in for the public demo. Does nothing unless DEMO_MODE is on. */
-export async function demoLogin() {
-  if (!isDemo() || !adminConfigured()) redirect("/admin");
+export async function demoLogin(_prev: { error: string } | undefined) {
+  if (!isDemo()) return { error: "Demo login is turned off." };
+  if (!adminConfigured()) {
+    return {
+      error:
+        "Demo login is not configured here. Set ADMIN_PASSWORD and ADMIN_SECRET (16+ characters) for this environment and redeploy.",
+    };
+  }
   await startSession();
 }
 
