@@ -182,7 +182,7 @@ export default function Home() {
         </section>
 
         <section aria-label="Luna in numbers" className="mx-auto max-w-6xl px-5 sm:px-8">
-          <dl className="on-dark glow-gold grid grid-cols-2 gap-y-10 rounded-[2.5rem] bg-night px-6 py-14 text-night-text shadow-[0_40px_80px_-50px_rgba(43,37,33,0.6)] lg:grid-cols-4">
+          <dl className="sheet glow-gold grid grid-cols-2 gap-y-10 rounded-[2.5rem] bg-night px-6 py-14 text-night-text shadow-[0_40px_80px_-50px_rgba(43,37,33,0.35)] dark:shadow-[0_40px_80px_-50px_rgba(0,0,0,0.7)] lg:grid-cols-4">
             {STATS.map((st) => (
               <div key={st.label} className="reveal flex flex-col-reverse text-center">
                 <dt className="mt-2 text-sm text-night-text/75">{st.label}</dt>
@@ -401,7 +401,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="on-dark glow-gold mt-8 rounded-t-[2.5rem] bg-night text-night-text">
+      <footer className="sheet glow-gold mt-8 rounded-t-[2.5rem] bg-night text-night-text">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 text-sm sm:px-8 md:grid-cols-[minmax(0,2fr)_repeat(2,minmax(0,1fr))]">
           <div>
             <span className="flex items-center gap-2.5">

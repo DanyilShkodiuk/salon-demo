@@ -19,8 +19,8 @@
   --color-gold: #b38f63;
   --color-on-sage: #ffffff;
   --color-field: #ffffff;
-  --color-night: #2b2521;
-  --color-night-text: #f7f3ed;
+  --color-night: #e8ddcd;
+  --color-night-text: #2b2521;
   --color-alert: #9b3b2f;
   --color-alert-soft: #f3dedb;
   --color-success: #3f6446;
@@ -98,8 +98,13 @@ body {
   --focus: var(--color-sage);
 }
 
-/* Dark surfaces switch the focus ring to a colour that stays visible there. */
-.on-dark {
+/* The stats card and footer are "sheets" in the night colour: deeper sand in the light
+   theme, near-black in the dark one. On the light sheet gold darkens to stay readable;
+   on the dark one the focus ring switches to a colour that stays visible there. */
+html:not([data-theme="dark"]) .sheet {
+  --color-gold: #8a6a42;
+}
+[data-theme="dark"] .sheet {
   --focus: var(--color-sand-deep);
 }
 
