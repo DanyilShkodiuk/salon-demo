@@ -147,11 +147,54 @@ body {
   animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* Scrollable rows that still swipe but show no scrollbar. */
-.no-scrollbar {
-  scrollbar-width: none;
+/* Sections fade up as they scroll into view. Only hidden once the observer is running
+   (ScrollReveal adds .reveal-ready), so content never stays invisible without JavaScript. */
+.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.no-scrollbar::-webkit-scrollbar {
+.reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Quick entrance for content that swaps in place (quiz steps, live badge). */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.fade-in {
+  animation: fade-in 0.5s ease both;
+}
+
+/* The pin on the contact map breathes gently. */
+@keyframes map-pulse {
+  0%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.35;
+  }
+}
+.map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 2.6s ease-in-out infinite;
+}
+
+/* FAQ answers slide open. */
+.faq[open] > p {
+  animation: fade-in 0.4s ease both;
+}
+.faq summary::-webkit-details-marker {
   display: none;
 }
 
@@ -183,8 +226,15 @@ body {
     scroll-behavior: auto;
   }
   .rise,
-  .carousel-progress {
+  .carousel-progress,
+  .fade-in,
+  .map-pulse,
+  .faq[open] > p {
     animation: none;
+  }
+  .reveal-ready .reveal {
+    opacity: 1;
+    transform: none;
   }
   * {
     transition: none !important;
