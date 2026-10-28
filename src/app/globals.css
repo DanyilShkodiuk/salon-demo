@@ -111,7 +111,7 @@ body {
 
 /* ---- Depth ---------------------------------------------------------------------------
    Four layers keep the page from feeling flat: a fine film grain over everything, slow
-   "aurora" glows behind key sections, frosted-glass cards that let the glow show through,
+   "aurora" glow fixed behind the whole page, frosted-glass cards that let the glow show through,
    and thin orbit lines that echo the moon in the logo. */
 
 /* Film grain: SVG noise tiled over the whole page. Never blocks clicks. */
@@ -133,11 +133,22 @@ body::after {
 
 /* Aurora: large blurred colour fields that drift slowly behind a section. */
 .aurora {
-  position: absolute;
+  position: fixed;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
+}
+
+/* A sand band that fades in and out instead of starting at a hard edge. */
+.fade-band {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-sand) 14rem,
+    var(--color-sand) calc(100% - 14rem),
+    transparent
+  );
 }
 .aurora > span {
   position: absolute;
@@ -187,12 +198,7 @@ body::after {
   }
 }
 
-/* Soft light pooling into a section from one corner, for sections without an aurora. */
-.glow {
-  background-image:
-    radial-gradient(60rem 30rem at 85% 0%, color-mix(in oklab, var(--color-sage-soft) 80%, transparent), transparent 70%),
-    radial-gradient(50rem 30rem at 0% 100%, color-mix(in oklab, var(--color-sand-deep) 55%, transparent), transparent 70%);
-}
+/* A soft warm glow from the top edge of a dark surface. */
 .glow-gold {
   background-image: radial-gradient(40rem 18rem at 50% 0%, color-mix(in oklab, var(--color-gold) 22%, transparent), transparent 75%);
 }
@@ -229,8 +235,9 @@ body::after {
     transparent 0 46px,
     color-mix(in oklab, var(--color-gold) 30%, transparent) 46px 47px
   );
-  -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
-  mask-image: radial-gradient(circle, black 30%, transparent 70%);
+  /* Fades out inside its own box, so the rings never end at a hard edge. */
+  -webkit-mask-image: radial-gradient(circle closest-side, black 35%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, black 35%, transparent 100%);
 }
 
 /* Display type: a light, high-contrast serif, set generously. */

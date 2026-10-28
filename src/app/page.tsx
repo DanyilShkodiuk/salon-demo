@@ -64,12 +64,12 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <div className="relative isolate overflow-hidden">
-          <div className="aurora" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
+        {/* One drifting colour field behind the whole page, so sections share one atmosphere. */}
+        <div className="aurora" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
           <div className="rise">
             <p className="eyebrow text-gold">Luna Hair Studio</p>
@@ -125,11 +125,9 @@ export default function Home() {
           </div>
         </section>
 
-        </div>
-
         <section
           id="story"
-          className="relative isolate overflow-hidden border-t border-rule py-20 sm:py-28"
+          className="relative isolate overflow-x-clip py-20 sm:py-28"
           aria-labelledby="story-title"
         >
           <div aria-hidden="true" className="orbits -right-40 -top-24 -z-10 w-[44rem]" />
@@ -183,8 +181,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section aria-label="Luna in numbers" className="on-dark glow-gold bg-night text-night-text">
-          <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-y-10 px-5 py-14 sm:px-8 lg:grid-cols-4">
+        <section aria-label="Luna in numbers" className="mx-auto max-w-6xl px-5 sm:px-8">
+          <dl className="on-dark glow-gold grid grid-cols-2 gap-y-10 rounded-[2.5rem] bg-night px-6 py-14 text-night-text shadow-[0_40px_80px_-50px_rgba(43,37,33,0.6)] lg:grid-cols-4">
             {STATS.map((st) => (
               <div key={st.label} className="reveal flex flex-col-reverse text-center">
                 <dt className="mt-2 text-sm text-night-text/75">{st.label}</dt>
@@ -198,7 +196,7 @@ export default function Home() {
 
         <section
           id="services"
-          className="glow overflow-x-clip border-t border-rule bg-panel py-20 sm:py-24"
+          className="overflow-x-clip py-20 sm:py-24"
           aria-labelledby="services-title"
         >
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -219,12 +217,6 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="relative isolate overflow-hidden">
-          <div className="aurora" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
         <section className="relative mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-24" aria-labelledby="finder-title">
           <div className="reveal grid gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
             <div>
@@ -270,8 +262,6 @@ export default function Home() {
             ))}
           </ul>
         </section>
-
-        </div>
 
         <section
           id="hours"
@@ -336,7 +326,7 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="book" className="glow bg-sand py-20 sm:py-24" aria-labelledby="book-title">
+        <section id="book" className="fade-band py-28 sm:py-32" aria-labelledby="book-title">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
             <div>
               <p className="eyebrow text-gold">Online booking</p>
@@ -411,7 +401,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="on-dark bg-night text-night-text">
+      <footer className="on-dark glow-gold mt-8 rounded-t-[2.5rem] bg-night text-night-text">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 text-sm sm:px-8 md:grid-cols-[minmax(0,2fr)_repeat(2,minmax(0,1fr))]">
           <div>
             <span className="flex items-center gap-2.5">
@@ -469,17 +459,17 @@ export default function Home() {
 function StreetMap() {
   return (
     <svg viewBox="0 0 400 220" role="img" aria-label="Map: Luna is on Księżycowa Street, near the park" className="block h-auto w-full bg-sand">
-      <rect x="250" y="20" width="130" height="80" rx="18" className="fill-sage-soft" />
-      <text x="315" y="64" textAnchor="middle" className="fill-muted text-[11px]">Park</text>
+      <rect x="316" y="24" width="72" height="96" rx="16" className="fill-sage-soft" />
+      <text x="352" y="76" textAnchor="middle" className="fill-muted text-[11px]">Park</text>
       <g className="stroke-panel" strokeLinecap="round" fill="none">
         <path d="M-10 140 H410" strokeWidth="22" />
         <path d="M120 -10 V230" strokeWidth="16" />
-        <path d="M-10 40 L230 180" strokeWidth="12" />
-        <path d="M300 120 V230" strokeWidth="12" />
+        <path d="M-10 40 L410 285" strokeWidth="12" />
+        <path d="M300 -10 V230" strokeWidth="12" />
       </g>
       <text x="16" y="170" className="fill-muted text-[11px] tracking-[0.15em]">KSIĘŻYCOWA</text>
       <g transform="translate(205 122)">
-        <circle r="22" className="fill-gold/25 map-pulse" />
+        <circle cy="-8" r="22" className="fill-gold/25 map-pulse" />
         <path d="M0 10 C-10 -2 -12 -6 -12 -11 A12 12 0 0 1 12 -11 C12 -6 10 -2 0 10 Z" className="fill-sage" />
         <circle cy="-11" r="4.5" className="fill-panel" />
       </g>
