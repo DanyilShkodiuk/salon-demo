@@ -1,5 +1,7 @@
 # Luna Hair Studio: online booking for a small salon
 
+[![CI](https://github.com/DanyilShkodiuk/salon-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/DanyilShkodiuk/salon-demo/actions/workflows/ci.yml)
+
 **Live demo:** [salon-demo-ruby.vercel.app](https://salon-demo-ruby.vercel.app) · **Admin panel:** [/admin](https://salon-demo-ruby.vercel.app/admin), press **Enter demo admin** (no password needed in the demo)
 
 A website where a salon's customers book an appointment themselves, any time of day, and the owner confirms it with one click. Luna Hair Studio is a sample salon; the names, prices and shades are demo data, and the site is built to be adapted to a real business.
@@ -77,7 +79,7 @@ Set `DEMO_MODE=true` for a public demo. The admin login page then shows an **Ent
 
 1. In the Neon dashboard open your project and click **Connect**. Copy the connection string.
 2. Save it without showing it on screen: `npm run db:setup`, paste (nothing appears), press Enter. This writes `DATABASE_URL` to `.env.local`, which is never committed.
-3. Create the table: `npm run db:migrate`
+3. Create the table: `npm run db:migrate`. Run it again after pulling changes that add files to `drizzle/`.
 4. Check the connection: `npm run db:check` (prints whether the table exists and how many bookings it holds)
 5. Start the app: `npm run dev`. Bookings now persist across restarts.
 
@@ -99,9 +101,11 @@ npm run typecheck
 npm run build
 ```
 
+GitHub Actions runs the same three checks on every pull request and every push to `main`.
+
 ### How double booking is prevented
 
-The API re-checks the chosen time on submit, then inserts with a single SQL statement that only succeeds if no active booking overlaps. If two people submit the same time at once, the second gets a 409 and sees fresh times. The one-statement guard is not a database-level lock; for a busy salon add a Postgres exclusion constraint.
+The API re-checks the chosen time on submit, then inserts with a single SQL statement that only succeeds if no active booking overlaps. If two people submit the same time at once, the second gets a 409 and sees fresh times. Underneath, a Postgres exclusion constraint (`bookings_no_overlap`, migration `0001`) refuses any two active bookings on the same date whose times overlap, so even a perfectly timed race or a manual insert cannot create a double booking.
 
 ### Configuration
 
