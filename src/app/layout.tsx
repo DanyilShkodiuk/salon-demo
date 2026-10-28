@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/bricolage-grotesque/wdth.css";
+import "@fontsource-variable/cormorant-garamond/wght.css";
+import "@fontsource-variable/manrope/wght.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#38205a",
+  themeColor: "#f7f3ed",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

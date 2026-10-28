@@ -1,69 +1,82 @@
 @import "tailwindcss";
 
+/* Calm, warm neutrals with a muted sage accent. Contrast pairs checked for WCAG AA:
+   ink/muted on cream and panel, white on sage, cream on ink. */
 @theme {
-  --color-ink: #17122a;
-  --color-mist: #f1eff6;
-  --color-panel: #ffffff;
-  --color-plum: #38205a;
-  --color-plum-deep: #281542;
-  --color-lilac: #cbb8f0;
-  --color-lilac-soft: #e7def8;
-  --color-marigold: #f4b63a;
-  --color-rule: #d9d3e6;
-  --color-muted: #5a5272;
-  --color-alert: #a3342b;
-  --color-lichen: #2f6b4f;
-  --font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, sans-serif;
+  --color-ink: #2b2521;
+  --color-cream: #f7f3ed;
+  --color-panel: #fffdf9;
+  --color-sand: #efe7dc;
+  --color-sand-deep: #e4d8c8;
+  --color-rule: #e1d6c8;
+  --color-muted: #6b6058;
+  --color-sage: #56634f;
+  --color-sage-deep: #434e3d;
+  --color-sage-soft: #e6eadf;
+  --color-gold: #b38f63;
+  --color-alert: #9b3b2f;
+  --color-success: #3f6446;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --font-serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman",
+    serif;
 }
 
 html {
   color-scheme: light;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 6rem;
 }
 
 body {
-  background: var(--color-mist);
+  background: var(--color-cream);
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
-  --focus: var(--color-plum);
+  --focus: var(--color-sage);
 }
 
 /* Dark surfaces switch the focus ring to a colour that stays visible there. */
 .on-dark {
-  --focus: var(--color-marigold);
+  --focus: var(--color-sand-deep);
 }
 
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* Display type: compressed, heavy, tightly set. */
+/* Display type: a light, high-contrast serif, set generously. */
 .display {
-  font-weight: 800;
-  font-stretch: 75%;
-  letter-spacing: -0.035em;
-  line-height: 0.82;
-}
-
-.heading {
-  font-weight: 700;
-  font-stretch: 85%;
-  letter-spacing: -0.02em;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
   line-height: 1.02;
 }
 
-/* The one orchestrated moment: the wordmark rises into place once on load. */
+.heading {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.1;
+}
+
+/* Small spaced capitals for labels above headings. */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* The one orchestrated moment: the hero text fades up once on load. */
 @keyframes rise {
   from {
-    transform: translateY(18%);
+    transform: translateY(12px);
     opacity: 0;
   }
   to {
@@ -72,7 +85,7 @@ body {
   }
 }
 .rise {
-  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

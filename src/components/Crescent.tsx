@@ -1,14 +1,12 @@
 export default function Crescent({ className = "" }: { className?: string }) {
-  // A crescent: a full disc with a second, offset disc cut out of it.
+  // A crescent: the outer edge of a full disc, closed by the edge of an offset disc cut out of it.
+  // Drawn as one path so several crescents on a page don't share an SVG mask id.
   return (
     <svg viewBox="0 0 200 200" aria-hidden="true" className={className}>
-      <defs>
-        <mask id="crescent-cut">
-          <rect width="200" height="200" fill="white" />
-          <circle cx="128" cy="86" r="78" fill="black" />
-        </mask>
-      </defs>
-      <circle cx="100" cy="100" r="92" fill="currentColor" mask="url(#crescent-cut)" />
+      <path
+        d="M114.58 9.16A92 92 0 1 0 181.42 142.84A78 78 0 1 1 114.58 9.16Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }

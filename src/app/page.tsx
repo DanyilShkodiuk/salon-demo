@@ -7,121 +7,178 @@ import { SALON, SERVICES } from "@/lib/config";
 import { formatMinute } from "@/lib/time";
 
 const DAYS = [
-  ["Mon", 1],
-  ["Tue", 2],
-  ["Wed", 3],
-  ["Thu", 4],
-  ["Fri", 5],
-  ["Sat", 6],
-  ["Sun", 0],
+  ["Monday", 1],
+  ["Tuesday", 2],
+  ["Wednesday", 3],
+  ["Thursday", 4],
+  ["Friday", 5],
+  ["Saturday", 6],
+  ["Sunday", 0],
+] as const;
+
+const NAV = [
+  ["Services", "#services"],
+  ["Hours", "#hours"],
 ] as const;
 
 export default function Home() {
   const services = SERVICES.map((s) => ({ ...s }));
+  const fromPrice = Math.min(...services.map((s) => s.priceUsd));
 
   return (
     <>
-      <header className="on-dark relative overflow-hidden bg-plum text-mist">
-        <div className="relative mx-auto max-w-7xl px-5 pb-12 pt-6 sm:px-8">
-          <nav className="flex items-center justify-between gap-3" aria-label="Main">
-            <span className="heading min-w-0 text-xl">
-              <span aria-hidden="true" className="min-[375px]:hidden">
-                Luna
-              </span>
-              <span className="hidden min-[375px]:inline">Luna Hair Studio</span>
-            </span>
-            <div className="flex shrink-0 items-center gap-5">
-              <Link href="/admin" className="hidden text-sm underline-offset-4 hover:underline sm:inline">
-                Staff login
-              </Link>
+      <header className="sticky top-0 z-20 border-b border-rule/70 bg-cream/90 backdrop-blur">
+        <nav
+          className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8"
+          aria-label="Main"
+        >
+          <a href="#top" className="flex min-w-0 items-center gap-2.5">
+            <Crescent className="h-6 w-6 shrink-0 text-gold" />
+            <span className="heading text-2xl leading-none">Luna</span>
+            <span className="eyebrow hidden pt-1 text-muted min-[400px]:inline">Hair Studio</span>
+          </a>
+          <div className="flex shrink-0 items-center gap-6 text-sm">
+            {NAV.map(([label, href]) => (
+              <a key={href} href={href} className="hidden text-muted hover:text-ink md:inline">
+                {label}
+              </a>
+            ))}
+            <Link href="/admin" className="hidden text-muted hover:text-ink md:inline">
+              Staff login
+            </Link>
+            <a
+              href="#book"
+              className="rounded-full bg-sage px-5 py-2.5 font-semibold text-white transition-colors hover:bg-sage-deep"
+            >
+              Book a time
+            </a>
+          </div>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+          <div className="rise">
+            <p className="eyebrow text-gold">Luna Hair Studio</p>
+            <h1 className="display mt-5 text-balance text-[clamp(2.9rem,7.5vw,5.5rem)]">
+              Cuts and colour, with a chair held for you.
+            </h1>
+            <p className="mt-6 max-w-[42ch] text-pretty text-lg text-muted">
+              A quiet studio for cuts, colour and styling. Choose a service, see the times that are
+              really free, and book in under a minute.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
               <a
                 href="#book"
-                className="rounded-full bg-marigold px-4 py-2.5 text-sm font-semibold text-ink hover:bg-mist sm:px-5"
+                className="rounded-full bg-sage px-7 py-3.5 font-semibold text-white transition-colors hover:bg-sage-deep"
               >
-                Book a time
+                Book an appointment
+              </a>
+              <a
+                href="#services"
+                className="rounded-full border border-ink/20 px-7 py-3.5 font-semibold transition-colors hover:border-ink"
+              >
+                View services
               </a>
             </div>
-          </nav>
-
-          <div className="relative mt-14 sm:mt-20">
-            <Crescent className="pointer-events-none absolute right-0 top-[6%] h-[clamp(5rem,22vw,20rem)] w-[clamp(5rem,22vw,20rem)] text-marigold" />
-            <h1 className="display rise text-[clamp(8rem,34vw,30rem)]">
-              Luna
-              <span className="sr-only"> Hair Studio</span>
-            </h1>
-          </div>
-
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <p className="max-w-[22ch] text-balance text-2xl font-medium leading-snug sm:text-3xl">
-              Cuts and colour, with a chair held for you.
-            </p>
-            <ul className="grid divide-y divide-mist/25 overflow-hidden rounded-2xl border border-mist/25 text-sm sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:w-[34rem]">
+            <dl className="mt-12 grid max-w-xl grid-cols-3 gap-4 border-t border-rule pt-6 text-sm">
               {[
-                ["Open", "Monday to Saturday"],
+                ["Open", "Mon – Sat"],
                 ["Book ahead", `Up to ${SALON.maxDaysAhead} days`],
                 ["Payment", "At the salon"],
               ].map(([k, v]) => (
-                <li key={k} className="px-4 py-3">
-                  <span className="block text-mist/70">{k}</span>
-                  <span className="font-semibold">{v}</span>
-                </li>
+                <div key={k}>
+                  <dt className="text-muted">{k}</dt>
+                  <dd className="mt-1 font-semibold">{v}</dd>
+                </div>
               ))}
-            </ul>
+            </dl>
           </div>
-        </div>
-      </header>
 
-      <main>
-        <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8" aria-labelledby="services">
-          <h2 id="services" className="heading mb-8 text-5xl sm:text-6xl">
-            Services
-          </h2>
-          <ServiceTiles services={services} />
+          <div aria-hidden="true" className="relative mx-auto w-full max-w-sm lg:max-w-none">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2rem] bg-gradient-to-b from-sand-deep via-sand to-sage-soft">
+              <div className="absolute inset-5 rounded-t-[999px] rounded-b-[1.5rem] border border-panel/80" />
+              <Crescent className="absolute left-1/2 top-[22%] h-[38%] w-[38%] -translate-x-1/2 text-panel/90" />
+              <p className="display absolute inset-x-0 bottom-[14%] px-8 text-center text-3xl italic text-ink/80 sm:text-4xl">
+                Every visit starts with a conversation.
+              </p>
+            </div>
+            <div className="absolute -bottom-6 left-1/2 w-max -translate-x-1/2 rounded-full border border-rule bg-panel px-5 py-2.5 text-sm shadow-[0_10px_30px_-12px_rgba(43,37,33,0.25)]">
+              Services from <span className="font-semibold">${fromPrice}</span>
+            </div>
+          </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-5 pb-20 sm:px-8" aria-label="Colour and hours">
-          <div className="grid gap-4 lg:grid-cols-12">
-            <div className="rounded-[2rem] border border-rule bg-panel p-6 sm:p-8 lg:col-span-7">
+        <section
+          id="services"
+          className="border-t border-rule bg-panel py-20 sm:py-24"
+          aria-labelledby="services-title"
+        >
+          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow text-gold">Menu</p>
+                <h2 id="services-title" className="heading mt-3 text-5xl sm:text-6xl">
+                  Services
+                </h2>
+              </div>
+              <p className="max-w-[36ch] text-muted">
+                Clear prices and durations. Tap a service to start booking.
+              </p>
+            </div>
+            <ServiceTiles services={services} />
+          </div>
+        </section>
+
+        <section
+          id="hours"
+          className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24"
+          aria-label="Colour and hours"
+        >
+          <div className="grid gap-5 lg:grid-cols-12">
+            <div className="rounded-[2rem] border border-rule bg-panel p-6 sm:p-10 lg:col-span-7">
               <ShadeCard />
             </div>
 
-            <div className="on-dark rounded-[2rem] bg-plum p-6 text-mist sm:p-8 lg:col-span-5">
-              <h3 className="heading text-3xl sm:text-4xl">Opening hours</h3>
-              <dl className="mt-6 divide-y divide-mist/20">
+            <div className="rounded-[2rem] bg-sand p-6 sm:p-10 lg:col-span-5">
+              <p className="eyebrow text-gold">Visit us</p>
+              <h3 className="heading mt-3 text-4xl">Opening hours</h3>
+              <dl className="mt-6 divide-y divide-sand-deep">
                 {DAYS.map(([label, idx]) => {
                   const h = SALON.hours[idx];
                   return (
-                    <div key={label} className="flex justify-between py-2.5">
-                      <dt className="font-medium">{label}</dt>
-                      <dd className={h ? "" : "text-mist/60"}>
+                    <div key={label} className="flex justify-between py-3">
+                      <dt>{label}</dt>
+                      <dd className={h ? "font-medium tabular-nums" : "text-muted"}>
                         {h ? `${formatMinute(h.open)} – ${formatMinute(h.close)}` : "Closed"}
                       </dd>
                     </div>
                   );
                 })}
               </dl>
-              <p className="mt-4 text-sm text-mist/70">Times are in {SALON.timezone} time.</p>
+              <p className="mt-5 text-sm text-muted">Times are in {SALON.timezone} time.</p>
             </div>
           </div>
         </section>
 
-        <section id="book" className="bg-lilac-soft py-20" aria-labelledby="book-title">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <section id="book" className="bg-sand py-20 sm:py-24" aria-labelledby="book-title">
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
             <div>
-              <h2 id="book-title" className="heading text-5xl sm:text-6xl">
+              <p className="eyebrow text-gold">Online booking</p>
+              <h2 id="book-title" className="heading mt-3 text-5xl sm:text-6xl">
                 Book your time
               </h2>
               <p className="mt-5 max-w-[34ch] text-lg text-muted">
                 You only see times that are really free. We confirm every request personally.
               </p>
-              <ol className="mt-10 space-y-5">
+              <ol className="mt-10 space-y-6">
                 {[
-                  ["Choose a service", "Prices and durations are on each tile."],
+                  ["Choose a service", "Prices and durations are on each option."],
                   ["Pick a day and time", "Closed days and taken times are hidden."],
                   ["Leave your details", "An email or a phone number is enough."],
                 ].map(([title, text], i) => (
                   <li key={title} className="flex gap-4">
-                    <span className="heading grid h-10 w-10 shrink-0 place-items-center rounded-full bg-plum text-lg text-mist">
+                    <span className="heading grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold/60 text-xl text-gold">
                       {i + 1}
                     </span>
                     <span>
@@ -138,9 +195,15 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="on-dark bg-plum text-mist">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-sm sm:px-8">
-          <span>Demo project by Danyil Shkodiuk. Names, prices and shades are sample data.</span>
+      <footer className="on-dark bg-ink text-cream">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-10 text-sm sm:px-8">
+          <span className="flex items-center gap-2.5">
+            <Crescent className="h-5 w-5 text-gold" />
+            <span className="heading text-xl">Luna Hair Studio</span>
+          </span>
+          <span className="text-cream/70">
+            Demo project by Danyil Shkodiuk. Names, prices and shades are sample data.
+          </span>
           <Link href="/admin" className="underline underline-offset-4">
             Staff login
           </Link>

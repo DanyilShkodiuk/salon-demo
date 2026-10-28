@@ -7,7 +7,7 @@ type Slot = { startMinute: number; label: string };
 type Done = { service: string; date: string; time: string };
 
 const field =
-  "w-full rounded-xl border border-rule bg-white px-4 py-3 text-base text-ink placeholder:text-muted/70 aria-[invalid=true]:border-alert";
+  "w-full rounded-xl border border-rule bg-white px-4 py-3 text-base text-ink transition-colors placeholder:text-muted/70 hover:border-sand-deep focus:border-sage aria-[invalid=true]:border-alert";
 
 function todayLocal(): string {
   const d = new Date();
@@ -124,9 +124,12 @@ export default function BookingFlow({ services }: { services: Service[] }) {
     return (
       <section
         aria-live="polite"
-        className="self-start rounded-[2rem] bg-panel p-8 lg:sticky lg:top-24"
+        className="self-start rounded-[2rem] border border-rule bg-panel p-8 shadow-[0_20px_50px_-30px_rgba(43,37,33,0.35)] lg:sticky lg:top-28"
       >
-        <h2 className="heading text-4xl">Request received</h2>
+        <span className="grid h-12 w-12 place-items-center rounded-full bg-sage-soft text-xl text-sage" aria-hidden="true">
+          ✓
+        </span>
+        <h2 className="heading mt-5 text-4xl">Request received</h2>
         <p className="mt-4 text-lg leading-relaxed">
           {done.service} on {done.date} at {done.time}.
         </p>
@@ -136,7 +139,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
         </p>
         <button
           onClick={reset}
-          className="mt-8 rounded-full bg-plum px-6 py-3 font-semibold text-mist hover:bg-plum-deep"
+          className="mt-8 rounded-full bg-sage px-6 py-3 font-semibold text-white transition-colors hover:bg-sage-deep"
         >
           Book another appointment
         </button>
@@ -150,14 +153,14 @@ export default function BookingFlow({ services }: { services: Service[] }) {
     <form
       onSubmit={submit}
       noValidate
-      className="self-start rounded-[2rem] bg-panel p-6 sm:p-8 lg:sticky lg:top-24"
+      className="self-start rounded-[2rem] border border-rule bg-panel p-6 shadow-[0_20px_50px_-30px_rgba(43,37,33,0.35)] sm:p-8 lg:sticky lg:top-28"
     >
-      <p className="mb-6 rounded-2xl bg-lilac-soft px-4 py-3 text-sm">
+      <p className="mb-7 rounded-2xl border border-sand-deep bg-sand/60 px-4 py-3 text-sm text-muted">
         This is a demo. Please use made-up details, not your real name, email or phone number.
       </p>
 
       <fieldset>
-        <legend className="heading text-3xl">Choose a service</legend>
+        <legend className="heading text-[1.75rem]">Choose a service</legend>
         <div role="radiogroup" className="mt-4 grid gap-2 sm:grid-cols-2">
           {services.map((s) => {
             const selected = s.id === serviceId;
@@ -170,15 +173,15 @@ export default function BookingFlow({ services }: { services: Service[] }) {
                 onClick={() => setServiceId(s.id)}
                 className={`rounded-2xl border p-4 text-left transition-colors ${
                   selected
-                    ? "border-plum bg-plum text-mist"
-                    : "border-rule bg-white hover:border-plum"
+                    ? "border-sage bg-sage-soft ring-1 ring-sage"
+                    : "border-rule bg-white hover:border-sage"
                 }`}
               >
                 <span className="flex items-baseline justify-between gap-2">
                   <span className="font-medium">{s.name}</span>
-                  <span className={`text-sm ${selected ? "text-mist/80" : "text-muted"}`}>${s.priceUsd}</span>
+                  <span className="text-sm font-semibold tabular-nums">${s.priceUsd}</span>
                 </span>
-                <span className={`mt-1 block text-sm ${selected ? "text-mist/80" : "text-muted"}`}>
+                <span className="mt-1 block text-sm text-muted">
                   {s.description} {s.minutes} min.
                 </span>
               </button>
@@ -188,7 +191,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
       </fieldset>
 
       <div className="mt-8">
-        <label htmlFor="date" className="heading block text-3xl">
+        <label htmlFor="date" className="heading block text-[1.75rem]">
           Choose a day
         </label>
         <input
@@ -198,14 +201,14 @@ export default function BookingFlow({ services }: { services: Service[] }) {
           value={date}
           onChange={(e) => setDate(e.target.value)}
           disabled={!serviceId}
-          className={`${field} mt-3 max-w-xs disabled:bg-mist disabled:text-muted`}
+          className={`${field} mt-3 max-w-xs disabled:bg-cream disabled:text-muted`}
         />
         {!serviceId && <p className="mt-2 text-sm text-muted">Pick a service first.</p>}
       </div>
 
       {date && serviceId && (
         <div className="mt-8" aria-live="polite">
-          <h3 className="heading text-3xl">Choose a time</h3>
+          <h3 className="heading text-[1.75rem]">Choose a time</h3>
           {loadingSlots && <p className="mt-3 text-muted">Loading free times…</p>}
           {!loadingSlots && slots && slots.length > 0 && (
             <div role="radiogroup" aria-label="Free times" className="mt-3 flex flex-wrap gap-2">
@@ -216,10 +219,10 @@ export default function BookingFlow({ services }: { services: Service[] }) {
                   aria-checked={startMinute === s.startMinute}
                   key={s.startMinute}
                   onClick={() => setStartMinute(s.startMinute)}
-                  className={`min-w-[4.75rem] rounded-full border px-4 py-2.5 text-sm font-semibold ${
+                  className={`min-w-[4.75rem] rounded-full border px-4 py-2.5 text-sm font-semibold tabular-nums transition-colors ${
                     startMinute === s.startMinute
-                      ? "border-ink bg-marigold text-ink"
-                      : "border-rule bg-white hover:border-plum"
+                      ? "border-sage bg-sage text-white"
+                      : "border-rule bg-white hover:border-sage"
                   }`}
                 >
                   {s.label}
@@ -235,7 +238,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
 
       {startMinute !== null && (
         <div className="mt-8">
-          <h3 className="heading text-3xl">Your details</h3>
+          <h3 className="heading text-[1.75rem]">Your details</h3>
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="name" className="mb-1 block text-sm font-medium">
@@ -303,14 +306,14 @@ export default function BookingFlow({ services }: { services: Service[] }) {
             />
           </div>
 
-          <p className="mt-6 text-sm text-muted">
+          <p className="mt-6 rounded-xl bg-cream px-4 py-3 text-sm text-muted">
             {service?.name}, {date}, {slots?.find((s) => s.startMinute === startMinute)?.label}.
             You pay at the salon.
           </p>
           <button
             type="submit"
             disabled={!canSubmit || submitting}
-            className="mt-3 rounded-full bg-plum px-7 py-3.5 font-semibold text-mist hover:bg-plum-deep disabled:cursor-not-allowed disabled:opacity-40"
+            className="mt-4 rounded-full bg-sage px-7 py-3.5 font-semibold text-white transition-colors hover:bg-sage-deep disabled:cursor-not-allowed disabled:opacity-40"
           >
             {submitting ? "Sending…" : "Request this time"}
           </button>

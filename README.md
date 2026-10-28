@@ -109,7 +109,7 @@ Salon name, timezone, opening hours, slot step, booking window and the service l
 
 ### Design notes
 
-Style: oversized-type minimalism with a bento layout. Palette: plum `#38205a`, lilac `#cbb8f0`, mist `#f1eff6`, with marigold `#f4b63a` reserved for calls to action and the selected time. Font: Bricolage Grotesque (variable, self-hosted via `@fontsource-variable`). It covers Latin and Latin Extended (Polish letters work) but not Cyrillic; add a second font before localising to Ukrainian.
+Style: calm, editorial minimalism with plenty of white space. Palette: warm cream `#f7f3ed` and sand `#efe7dc` surfaces, espresso ink `#2b2521`, muted sage `#56634f` for calls to action and the selected time, with a soft gold `#b38f63` for small accents. Fonts: Cormorant Garamond for headings and Manrope for text (both variable, self-hosted via `@fontsource-variable`). Both cover Latin, Latin Extended (Polish) and Cyrillic (Ukrainian), so the site is ready for localisation.
 
 ### Not included yet
 

@@ -2,14 +2,6 @@
 
 type Service = { id: string; name: string; description: string; priceUsd: number; minutes: number };
 
-// Tile positions on the bento grid (large screens). Order matches SERVICES.
-const LAYOUT = [
-  "lg:col-span-7 bg-plum text-mist on-dark",
-  "lg:col-span-5 bg-lilac text-ink",
-  "lg:col-span-5 bg-panel text-ink border border-rule",
-  "lg:col-span-7 bg-marigold text-ink",
-];
-
 export default function ServiceTiles({ services }: { services: Service[] }) {
   function choose(id: string) {
     window.dispatchEvent(new CustomEvent("select-service", { detail: id }));
@@ -17,28 +9,29 @@ export default function ServiceTiles({ services }: { services: Service[] }) {
   }
 
   return (
-    <ul className="grid gap-4 lg:grid-cols-12 lg:auto-rows-fr">
+    <ul className="grid gap-4 sm:grid-cols-2">
       {services.map((s, i) => (
-        <li key={s.id} className={`${LAYOUT[i] ?? ""} rounded-[2rem] lg:min-h-[19rem]`}>
+        <li key={s.id}>
           <button
             type="button"
             onClick={() => choose(s.id)}
-            className="flex h-full min-h-[15rem] w-full flex-col justify-between gap-8 rounded-[2rem] p-6 text-left sm:p-8"
+            className="group flex h-full w-full flex-col justify-between gap-10 rounded-[1.75rem] border border-rule bg-cream p-6 text-left transition-colors hover:border-sage hover:bg-sage-soft/60 sm:p-8"
           >
             <span>
-              <span
-                className={`heading block ${i === 0 ? "text-5xl sm:text-7xl" : "text-3xl sm:text-4xl"}`}
-              >
-                {s.name}
-              </span>
-              <span className={`mt-3 block max-w-[30ch] ${i === 0 ? "text-lg" : "text-base"}`}>
-                {s.description}
-              </span>
+              <span className="eyebrow block text-gold">{String(i + 1).padStart(2, "0")}</span>
+              <span className="heading mt-3 block text-4xl">{s.name}</span>
+              <span className="mt-2 block max-w-[32ch] text-muted">{s.description}</span>
             </span>
-            <span className="flex items-end justify-between gap-4">
-              <span className="heading text-3xl">${s.priceUsd}</span>
-              <span className="whitespace-nowrap text-sm font-medium underline underline-offset-4">
-                Book · {s.minutes} min
+            <span className="flex items-end justify-between gap-4 border-t border-rule pt-5">
+              <span>
+                <span className="heading text-3xl">${s.priceUsd}</span>
+                <span className="ml-2 text-sm text-muted">· {s.minutes} min</span>
+              </span>
+              <span className="whitespace-nowrap text-sm font-semibold text-sage group-hover:text-sage-deep">
+                Book
+                <span aria-hidden="true" className="ml-1.5 inline-block transition-transform group-hover:translate-x-1">
+                  →
+                </span>
               </span>
             </span>
           </button>
