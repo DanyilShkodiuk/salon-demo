@@ -19,7 +19,18 @@ export class PgStore implements BookingStore {
   async createIfFree(input: CreateBooking): Promise<BookingRow | null> {
     // One statement: the insert only happens if no active booking overlaps the range.
     const end = input.startMinute + input.durationMinutes;
-    const inserted = await this.db
+    try {
+      const inserted = await this.insertQuery(input, end);
+      return inserted[0] ?? null;
+    } catch (e) {
+      // Two requests raced past the NOT EXISTS check; the exclusion constraint stopped the second.
+      if (isOverlapViolation(e)) return null;
+      throw e;
+    }
+  }
+
+  private insertQuery(input: CreateBooking, end: number) {
+    return this.db
       .insert(bookings)
       .select(
         this.db
@@ -48,7 +59,6 @@ export class PgStore implements BookingStore {
           ),
       )
       .returning();
-    return inserted[0] ?? null;
   }
 
   async list() {
@@ -63,4 +73,12 @@ export class PgStore implements BookingStore {
       .returning();
     return rows[0] ?? null;
   }
+}
+
+/** Postgres exclusion_violation (23P01) on bookings_no_overlap, possibly wrapped by drizzle. */
+function isOverlapViolation(e: unknown): boolean {
+  for (let err = e; err && typeof err === "object"; err = (err as { cause?: unknown }).cause) {
+    if ((err as { code?: unknown }).code === "23P01") return true;
+  }
+  return false;
 }

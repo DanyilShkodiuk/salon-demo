@@ -1,4 +1,5 @@
 import { PGlite } from "@electric-sql/pglite";
+import { btree_gist } from "@electric-sql/pglite/contrib/btree_gist";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -64,9 +65,42 @@ function suite(name: string, make: () => Promise<BookingStore>) {
 
 suite("MemoryStore", async () => new MemoryStore());
 
-suite("PgStore on real Postgres (PGlite)", async () => {
-  const client = new PGlite();
+async function migratedPglite() {
+  const client = new PGlite({ extensions: { btree_gist } });
   const db = drizzle(client);
   await migrate(db, { migrationsFolder: "./drizzle" });
+  return { client, db };
+}
+
+suite("PgStore on real Postgres (PGlite)", async () => {
+  const { db } = await migratedPglite();
   return new PgStore(db as never);
+});
+
+describe("bookings_no_overlap constraint", () => {
+  const insert = (start: number, status = "pending") =>
+    `insert into bookings (service_id, service_name, date, start_minute, duration_minutes, customer_name, contact, status)
+     values ('cut', 'Haircut', '2026-10-20', ${start}, 60, 'Anna', 'anna@example.com', '${status}')`;
+
+  it("rejects an overlapping row even when the app check is bypassed", async () => {
+    const { client } = await migratedPglite();
+    await client.exec(insert(600));
+    await expect(client.exec(insert(630))).rejects.toMatchObject({ code: "23P01" });
+    // Back-to-back and cancelled rows are allowed.
+    await client.exec(insert(660));
+    await client.exec(insert(600, "cancelled"));
+  });
+
+  it("makes createIfFree return null instead of throwing on a violation", async () => {
+    const { client, db } = await migratedPglite();
+    const store = new PgStore(db as never);
+    await client.exec(insert(600));
+    // Simulate a racing request that already passed the NOT EXISTS check.
+    const raced = Object.create(store, {
+      insertQuery: {
+        value: () => client.exec(insert(630)),
+      },
+    });
+    expect(await raced.createIfFree({ ...base, date: "2026-10-20", startMinute: 630 })).toBeNull();
+  });
 });
