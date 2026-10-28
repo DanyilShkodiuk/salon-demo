@@ -113,7 +113,7 @@ export default function Home() {
 
         <section
           id="services"
-          className="border-t border-rule bg-panel py-20 sm:py-24"
+          className="overflow-x-clip border-t border-rule bg-panel py-20 sm:py-24"
           aria-labelledby="services-title"
         >
           <div className="mx-auto max-w-6xl px-5 sm:px-8">

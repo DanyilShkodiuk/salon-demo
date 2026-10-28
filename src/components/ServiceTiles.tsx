@@ -4,18 +4,40 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type Service = { id: string; name: string; description: string; priceUsd: number; minutes: number };
 
-/** How long each card stays in front before the carousel moves on. */
+/** How long each card stays in front before the carousel turns. */
 const AUTOPLAY_MS = 5000;
+/** Cards on the ring. With few services the list repeats, so neighbours sit at a gentle angle. */
+const MIN_SLOTS = 8;
+
+/** Angle in degrees folded into -180..180. */
+const fold = (deg: number) => ((((deg + 180) % 360) + 360) % 360) - 180;
+
+/** Fades and softens cards as they turn away from the front of the ring. */
+function depthStyle(angle: number): React.CSSProperties {
+  const a = Math.abs(fold(angle));
+  const opacity = a < 1 ? 1 : a <= 50 ? 0.7 : a <= 95 ? 0.25 : 0;
+  return {
+    opacity,
+    filter: a < 1 ? "none" : `saturate(0.7) blur(${a <= 50 ? 0.5 : 1.5}px)`,
+    pointerEvents: a <= 50 ? "auto" : "none",
+  };
+}
 
 export default function ServiceTiles({ services }: { services: Service[] }) {
-  const track = useRef<HTMLUListElement>(null);
-  const [active, setActive] = useState(0);
+  const n = services.length;
+  const slots = n * Math.max(1, Math.ceil(MIN_SLOTS / n));
+  const step = 360 / slots;
+
+  // Unbounded position, so the ring always turns the short way and never jumps on wrap-around.
+  const [pos, setPos] = useState(0);
+  const active = ((pos % n) + n) % n;
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [stopped, setStopped] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  // Bumped on every move so the progress bar on the active dot restarts.
-  const [cycle, setCycle] = useState(0);
+  const dragX = useRef<number | null>(null);
+  // Set when a pointer press turned into a swipe, so the click that follows doesn't book.
+  const swiped = useRef(false);
 
   const paused = hovered || focused || stopped || reducedMotion;
 
@@ -24,31 +46,15 @@ export default function ServiceTiles({ services }: { services: Service[] }) {
     document.getElementById("book")?.scrollIntoView({ behavior: "smooth" });
   }
 
-  const items = () => Array.from(track.current?.children ?? []) as HTMLElement[];
-  // Where the track must scroll to put a card at its snap point (the track has side padding).
-  const snapLeft = (el: HTMLElement) =>
-    el.offsetLeft - parseFloat(getComputedStyle(track.current!).paddingLeft || "0");
+  const next = useCallback(() => setPos((p) => p + 1), []);
+  const prev = useCallback(() => setPos((p) => p - 1), []);
 
-  const atEnd = () => {
-    const t = track.current;
-    return !t || t.scrollLeft >= t.scrollWidth - t.clientWidth - 2;
-  };
-
-  const goTo = useCallback(
-    (i: number) => {
-      const t = track.current;
-      const list = items();
-      if (!t || list.length === 0) return;
-      const index = (i + list.length) % list.length;
-      t.scrollTo({ left: snapLeft(list[index]), behavior: reducedMotion ? "auto" : "smooth" });
-      setActive(index);
-      setCycle((c) => c + 1);
-    },
-    [reducedMotion],
-  );
-
-  const next = useCallback(() => goTo(active + 1), [goTo, active]);
-  const prev = () => goTo(active === 0 ? services.length - 1 : active - 1);
+  /** Turns the ring the short way until service i is in front. */
+  function goTo(i: number) {
+    let delta = (((i - active) % n) + n) % n;
+    if (delta > n / 2) delta -= n;
+    setPos((p) => p + delta);
+  }
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -60,32 +66,9 @@ export default function ServiceTiles({ services }: { services: Service[] }) {
 
   useEffect(() => {
     if (paused) return;
-    const timer = window.setTimeout(() => {
-      if (document.visibilityState === "visible") next();
-      else setCycle((c) => c + 1);
-    }, AUTOPLAY_MS);
+    const timer = window.setTimeout(next, AUTOPLAY_MS);
     return () => window.clearTimeout(timer);
-  }, [paused, next, cycle]);
-
-  // Keep the dots in step when the visitor swipes or scrolls the track by hand.
-  function onScroll() {
-    const t = track.current;
-    if (!t) return;
-    const list = items();
-    if (atEnd()) {
-      // The last few cards can't reach the left edge, so once the track is at its end the
-      // active card is whichever of them was chosen, starting with the first of them.
-      const max = t.scrollWidth - t.clientWidth;
-      const first = list.findIndex((el) => snapLeft(el) >= max - 2);
-      setActive((a) => Math.max(a, first === -1 ? list.length - 1 : first));
-      return;
-    }
-    let best = 0;
-    list.forEach((el, i) => {
-      if (Math.abs(snapLeft(el) - t.scrollLeft) < Math.abs(snapLeft(list[best]) - t.scrollLeft)) best = i;
-    });
-    setActive(best);
-  }
+  }, [paused, next, pos]);
 
   return (
     <div
@@ -98,52 +81,92 @@ export default function ServiceTiles({ services }: { services: Service[] }) {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
       }}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") next();
+        if (e.key === "ArrowLeft") prev();
+      }}
     >
-      <ul
-        ref={track}
-        onScroll={onScroll}
-        className="no-scrollbar relative -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 py-2 sm:-mx-8 sm:scroll-px-8 sm:px-8 lg:mx-0 lg:scroll-px-0 lg:px-0"
+      {/* The stage: a ring of cards, seen from just in front of it. Swipe or drag to turn. */}
+      <div
+        className="ring-stage relative h-[22rem] touch-pan-y select-none [perspective:1600px]"
+        onPointerDown={(e) => (dragX.current = e.clientX)}
+        onPointerUp={(e) => {
+          if (dragX.current === null) return;
+          const dx = e.clientX - dragX.current;
+          dragX.current = null;
+          swiped.current = Math.abs(dx) > 40;
+          if (dx < -40) next();
+          if (dx > 40) prev();
+        }}
+        onClickCapture={(e) => {
+          if (!swiped.current) return;
+          swiped.current = false;
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onPointerCancel={() => (dragX.current = null)}
       >
-        {services.map((s, i) => (
-          <li
-            key={s.id}
-            aria-roledescription="slide"
-            aria-label={`${i + 1} of ${services.length}`}
-            className="w-[85%] shrink-0 snap-start sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/2.6)]"
-          >
-            <button
-              type="button"
-              onClick={() => choose(s.id)}
-              className={`group flex h-full min-h-[17rem] w-full flex-col justify-between gap-10 rounded-[1.75rem] border p-6 text-left transition-[background-color,border-color,transform,box-shadow] duration-500 hover:-translate-y-1 hover:border-sage hover:shadow-[0_24px_40px_-28px_rgba(43,37,33,0.45)] sm:p-8 ${
-                i === active ? "border-sage/60 bg-sage-soft/50" : "border-rule bg-cream"
-              }`}
-            >
-              <span>
-                <span className="eyebrow block text-gold">{String(i + 1).padStart(2, "0")}</span>
-                <span className="heading mt-3 block text-4xl">{s.name}</span>
-                <span className="mt-2 block max-w-[32ch] text-muted">{s.description}</span>
-              </span>
-              <span className="flex items-end justify-between gap-4 border-t border-rule pt-5">
-                <span>
-                  <span className="heading text-3xl">${s.priceUsd}</span>
-                  <span className="ml-2 text-sm text-muted">· {s.minutes} min</span>
-                </span>
-                <span className="whitespace-nowrap text-sm font-semibold text-sage group-hover:text-sage-deep">
-                  Book
-                  <span
-                    aria-hidden="true"
-                    className="ml-1.5 inline-block transition-transform group-hover:translate-x-1"
-                  >
-                    →
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-[20%] bottom-0 h-10 rounded-[50%] bg-ink/10 blur-2xl"
+        />
+        <ul className="absolute inset-0 [transform-style:preserve-3d] [transform:translateZ(calc(var(--ring-r)*-1))]">
+          {Array.from({ length: slots }, (_, k) => {
+            const s = services[k % n];
+            const angle = (k - pos) * step;
+            const a = fold(angle);
+            const front = Math.abs(a) < 1;
+            const side = !front && Math.abs(a) <= 50;
+            return (
+              <li
+                key={k}
+                aria-hidden={!front}
+                aria-roledescription={front ? "slide" : undefined}
+                aria-label={front ? `${(k % n) + 1} of ${n}` : undefined}
+                className="absolute left-1/2 top-1 w-[var(--ring-w)] transition-[transform,opacity,filter] duration-[900ms] ease-[cubic-bezier(0.22,0.8,0.25,1)] [backface-visibility:hidden]"
+                style={{
+                  transform: `translateX(-50%) rotateY(${angle}deg) translateZ(var(--ring-r))`,
+                  ...depthStyle(angle),
+                }}
+              >
+                <button
+                  type="button"
+                  tabIndex={front ? 0 : -1}
+                  onClick={() => {
+                    if (front) choose(s.id);
+                    else if (side) (a > 0 ? next : prev)();
+                  }}
+                  className={`group flex h-[20rem] w-full flex-col justify-between gap-8 rounded-[1.75rem] border p-6 text-left transition-[background-color,border-color,box-shadow] duration-700 sm:p-8 ${
+                    front
+                      ? "border-sage/50 bg-panel shadow-[0_40px_60px_-30px_rgba(43,37,33,0.5)] hover:border-sage"
+                      : "border-rule bg-sand"
+                  }`}
+                >
+                  <span>
+                    <span className="eyebrow block text-gold">{String((k % n) + 1).padStart(2, "0")}</span>
+                    <span className="heading mt-3 block text-4xl">{s.name}</span>
+                    <span className="mt-2 block max-w-[32ch] text-muted">{s.description}</span>
                   </span>
-                </span>
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+                  <span className="flex items-end justify-between gap-4 border-t border-rule pt-5">
+                    <span>
+                      <span className="heading text-3xl">${s.priceUsd}</span>
+                      <span className="ml-2 text-sm text-muted">· {s.minutes} min</span>
+                    </span>
+                    <span className="whitespace-nowrap rounded-full bg-sage px-4 py-2 text-sm font-semibold text-on-sage transition-colors group-hover:bg-sage-deep">
+                      Book
+                      <span aria-hidden="true" className="ml-1.5 inline-block">
+                        →
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-      <div className="mt-6 flex items-center justify-between gap-4">
+      <div className="mt-8 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           {services.map((s, i) => (
             <button
@@ -158,7 +181,7 @@ export default function ServiceTiles({ services }: { services: Service[] }) {
             >
               {i === active && (
                 <span
-                  key={cycle}
+                  key={pos}
                   aria-hidden="true"
                   className="carousel-progress absolute inset-y-0 left-0 rounded-full bg-sage"
                   style={{
@@ -177,7 +200,7 @@ export default function ServiceTiles({ services }: { services: Service[] }) {
             <button
               type="button"
               onClick={() => setStopped((v) => !v)}
-              aria-label={stopped ? "Start automatic scrolling" : "Stop automatic scrolling"}
+              aria-label={stopped ? "Start automatic turning" : "Stop automatic turning"}
               className="grid h-11 w-11 place-items-center rounded-full text-muted transition-colors hover:text-ink"
             >
               <span aria-hidden="true" className="text-xs">
