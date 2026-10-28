@@ -2,8 +2,10 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { ADMIN_COOKIE, verifySession } from "@/lib/auth";
 import { getStore } from "@/lib/db";
+import { ensureDemoData, isDemo, maskContact, maskName } from "@/lib/demo";
 import { formatMinute, localNow } from "@/lib/time";
 import LoginForm from "./LoginForm";
+import DemoLoginForm from "./DemoLoginForm";
 import { logout, setStatus } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -18,13 +20,15 @@ const STATUS_STYLE: Record<string, string> = {
 export default async function AdminPage() {
   const jar = await cookies();
   const authed = await verifySession(jar.get(ADMIN_COOKIE)?.value);
+  const demo = isDemo();
 
   if (!authed) {
     return (
       <main className="mx-auto max-w-3xl px-5 py-16">
         <h1 className="heading text-5xl">Staff login</h1>
         <p className="mt-3 text-muted">Sign in to see and confirm bookings.</p>
-        <LoginForm />
+        {demo && <DemoLoginForm />}
+        {!demo && <LoginForm />}
         <Link href="/" className="mt-10 inline-block text-sm underline underline-offset-4">
           Back to booking page
         </Link>
@@ -32,7 +36,9 @@ export default async function AdminPage() {
     );
   }
 
-  const all = await getStore().list();
+  const store = getStore();
+  if (demo) await ensureDemoData(store);
+  const all = await store.list();
   const today = localNow().date;
   const upcoming = all.filter((b) => b.date >= today);
   const past = all.filter((b) => b.date < today);
@@ -45,9 +51,15 @@ export default async function AdminPage() {
           <button className="text-sm underline underline-offset-4">Sign out</button>
         </form>
       </div>
+      {demo && (
+        <p className="mt-4 rounded-xl bg-lilac-soft px-4 py-3 text-sm">
+          Demo mode: anyone can open this page, so surnames and contacts are masked. Try confirming or
+          cancelling a booking.
+        </p>
+      )}
 
-      <Section title="Upcoming" rows={upcoming} empty="No upcoming bookings yet." />
-      {past.length > 0 && <Section title="Past" rows={past} empty="" />}
+      <Section title="Upcoming" rows={upcoming} empty="No upcoming bookings yet." demo={demo} />
+      {past.length > 0 && <Section title="Past" rows={past} empty="" demo={demo} />}
     </main>
   );
 }
@@ -56,10 +68,12 @@ function Section({
   title,
   rows,
   empty,
+  demo,
 }: {
   title: string;
   rows: Awaited<ReturnType<ReturnType<typeof getStore>["list"]>>;
   empty: string;
+  demo: boolean;
 }) {
   return (
     <section className="mt-10">
@@ -76,7 +90,8 @@ function Section({
                   {formatMinute(b.startMinute + b.durationMinutes)} · {b.serviceName}
                 </p>
                 <p className="mt-1 text-sm">
-                  {b.customerName} · <span className="text-muted">{b.contact}</span>
+                  {demo ? maskName(b.customerName) : b.customerName} ·{" "}
+                  <span className="text-muted">{demo ? maskContact(b.contact) : b.contact}</span>
                 </p>
                 {b.note && <p className="mt-1 text-sm text-muted">Note: {b.note}</p>}
               </div>
