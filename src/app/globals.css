@@ -109,6 +109,130 @@ body {
   border-radius: 6px;
 }
 
+/* ---- Depth ---------------------------------------------------------------------------
+   Four layers keep the page from feeling flat: a fine film grain over everything, slow
+   "aurora" glows behind key sections, frosted-glass cards that let the glow show through,
+   and thin orbit lines that echo the moon in the logo. */
+
+/* Film grain: SVG noise tiled over the whole page. Never blocks clicks. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] body::after {
+  opacity: 0.09;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.9 0 0 0 0 0.86 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Aurora: large blurred colour fields that drift slowly behind a section. */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.aurora > span {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.aurora > span:nth-child(1) {
+  background: var(--color-sand-deep);
+  top: -18vmax;
+  left: -10vmax;
+}
+.aurora > span:nth-child(2) {
+  background: var(--color-sage-soft);
+  top: 10%;
+  right: -16vmax;
+  animation-duration: 32s;
+  animation-delay: -8s;
+  opacity: 0.8;
+}
+.aurora > span:nth-child(3) {
+  background: color-mix(in oklab, var(--color-gold) 35%, transparent);
+  bottom: -24vmax;
+  left: 30%;
+  animation-duration: 38s;
+  animation-delay: -16s;
+}
+[data-theme="dark"] .aurora > span {
+  opacity: 0.35;
+}
+[data-theme="dark"] .aurora > span:nth-child(2) {
+  opacity: 0.6;
+}
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6vmax, 3vmax, 0) scale(1.12);
+  }
+  to {
+    transform: translate3d(-4vmax, 6vmax, 0) scale(0.95);
+  }
+}
+
+/* Soft light pooling into a section from one corner, for sections without an aurora. */
+.glow {
+  background-image:
+    radial-gradient(60rem 30rem at 85% 0%, color-mix(in oklab, var(--color-sage-soft) 80%, transparent), transparent 70%),
+    radial-gradient(50rem 30rem at 0% 100%, color-mix(in oklab, var(--color-sand-deep) 55%, transparent), transparent 70%);
+}
+.glow-gold {
+  background-image: radial-gradient(40rem 18rem at 50% 0%, color-mix(in oklab, var(--color-gold) 22%, transparent), transparent 75%);
+}
+
+/* Frosted glass card: translucent, blurred backdrop, a lit top edge and a soft drop shadow. */
+.surface {
+  background: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--color-panel) 88%, transparent),
+    color-mix(in oklab, var(--color-panel) 62%, transparent)
+  );
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  backdrop-filter: blur(16px) saturate(1.15);
+  border: 1px solid color-mix(in oklab, var(--color-rule) 70%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
+    0 1px 2px rgba(43, 37, 33, 0.04),
+    0 24px 48px -32px rgba(43, 37, 33, 0.35);
+}
+[data-theme="dark"] .surface {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
+/* Thin concentric rings, like orbits around the moon. */
+.orbits {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  background: repeating-radial-gradient(
+    circle,
+    transparent 0 46px,
+    color-mix(in oklab, var(--color-gold) 30%, transparent) 46px 47px
+  );
+  -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
+  mask-image: radial-gradient(circle, black 30%, transparent 70%);
+}
+
 /* Display type: a light, high-contrast serif, set generously. */
 .display {
   font-family: var(--font-serif);
@@ -224,6 +348,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .aurora > span {
+    animation: none;
   }
   .rise,
   .carousel-progress,

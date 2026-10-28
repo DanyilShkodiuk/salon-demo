@@ -45,7 +45,7 @@ export default function ServiceFinder({ services }: { services: Service[] }) {
   }
 
   return (
-    <div className="rounded-[2rem] border border-rule bg-panel p-6 sm:p-10">
+    <div className="surface rounded-[2rem] p-6 sm:p-10">
       <div className="flex items-center justify-between gap-4">
         <p className="eyebrow text-gold">Step {step} of 3</p>
         {goal && (

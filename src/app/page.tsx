@@ -64,7 +64,13 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+        <div className="relative isolate overflow-hidden">
+          <div className="aurora" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
           <div className="rise">
             <p className="eyebrow text-gold">Luna Hair Studio</p>
             <h1 className="display mt-5 text-balance text-[clamp(2.9rem,7.5vw,5.5rem)]">
@@ -106,7 +112,7 @@ export default function Home() {
           </div>
 
           <div aria-hidden="true" className="relative mx-auto w-full max-w-sm lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2rem] bg-gradient-to-b from-sand-deep via-sand to-sage-soft">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2rem] shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_50px_80px_-50px_rgba(43,37,33,0.5)] bg-gradient-to-b from-sand-deep via-sand to-sage-soft">
               <div className="absolute inset-5 rounded-t-[999px] rounded-b-[1.5rem] border border-panel/80" />
               <Crescent className="absolute left-1/2 top-[22%] h-[38%] w-[38%] -translate-x-1/2 text-panel/90 dark:text-gold/70" />
               <p className="display absolute inset-x-0 bottom-[14%] px-8 text-center text-3xl italic text-ink/80 sm:text-4xl">
@@ -119,7 +125,15 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="story" className="border-t border-rule py-20 sm:py-28" aria-labelledby="story-title">
+        </div>
+
+        <section
+          id="story"
+          className="relative isolate overflow-hidden border-t border-rule py-20 sm:py-28"
+          aria-labelledby="story-title"
+        >
+          <div aria-hidden="true" className="orbits -right-40 -top-24 -z-10 w-[44rem]" />
+          <div aria-hidden="true" className="orbits -bottom-64 -left-56 -z-10 w-[36rem] opacity-60" />
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="grid gap-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-20">
               <div className="reveal">
@@ -157,7 +171,7 @@ export default function Home() {
               {VALUES.map(([title, text], i) => (
                 <li
                   key={title}
-                  className="reveal rounded-[1.75rem] border border-rule bg-panel p-6 sm:p-8"
+                  className="reveal surface rounded-[1.75rem] p-6 sm:p-8"
                   style={{ transitionDelay: `${i * 120}ms` }}
                 >
                   <span className="heading text-4xl text-gold">0{i + 1}</span>
@@ -169,7 +183,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section aria-label="Luna in numbers" className="on-dark bg-night text-night-text">
+        <section aria-label="Luna in numbers" className="on-dark glow-gold bg-night text-night-text">
           <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-y-10 px-5 py-14 sm:px-8 lg:grid-cols-4">
             {STATS.map((st) => (
               <div key={st.label} className="reveal flex flex-col-reverse text-center">
@@ -184,7 +198,7 @@ export default function Home() {
 
         <section
           id="services"
-          className="overflow-x-clip border-t border-rule bg-panel py-20 sm:py-24"
+          className="glow overflow-x-clip border-t border-rule bg-panel py-20 sm:py-24"
           aria-labelledby="services-title"
         >
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -205,7 +219,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-24" aria-labelledby="finder-title">
+        <div className="relative isolate overflow-hidden">
+          <div className="aurora" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        <section className="relative mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-24" aria-labelledby="finder-title">
           <div className="reveal grid gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
             <div>
               <p className="eyebrow text-gold">Not sure?</p>
@@ -221,7 +241,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="team" className="mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-24" aria-labelledby="team-title">
+        <section id="team" className="relative mx-auto max-w-6xl px-5 pb-20 pt-20 sm:px-8 sm:pb-24 sm:pt-24" aria-labelledby="team-title">
           <div className="reveal mb-10">
             <p className="eyebrow text-gold">The team</p>
             <h2 id="team-title" className="heading mt-3 text-5xl sm:text-6xl">
@@ -232,7 +252,7 @@ export default function Home() {
             {TEAM.map((m, i) => (
               <li
                 key={m.name}
-                className="reveal group rounded-[2rem] border border-rule bg-panel p-6 transition-[transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_24px_40px_-28px_rgba(43,37,33,0.45)] sm:p-8"
+                className="reveal surface group rounded-[2rem] p-6 transition-[transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_24px_40px_-28px_rgba(43,37,33,0.45)] sm:p-8"
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
                 <div
@@ -251,17 +271,19 @@ export default function Home() {
           </ul>
         </section>
 
+        </div>
+
         <section
           id="hours"
-          className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24"
+          className="mx-auto max-w-6xl px-5 pb-20 sm:px-8 sm:pb-24"
           aria-label="Colour and hours"
         >
           <div className="reveal grid gap-5 lg:grid-cols-12">
-            <div className="rounded-[2rem] border border-rule bg-panel p-6 sm:p-10 lg:col-span-7">
+            <div className="surface rounded-[2rem] p-6 sm:p-10 lg:col-span-7">
               <ShadeCard />
             </div>
 
-            <div className="rounded-[2rem] bg-sand p-6 sm:p-10 lg:col-span-5">
+            <div className="rounded-[2rem] bg-sand p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_24px_48px_-32px_rgba(43,37,33,0.3)] sm:p-10 lg:col-span-5">
               <p className="eyebrow text-gold">Visit us</p>
               <h3 className="heading mt-3 text-4xl">Opening hours</h3>
               <dl className="mt-6 divide-y divide-sand-deep">
@@ -296,7 +318,7 @@ export default function Home() {
             {REVIEWS.map((r, i) => (
               <li
                 key={r.name}
-                className="reveal flex flex-col justify-between gap-8 rounded-[2rem] bg-sand p-6 sm:p-8"
+                className="reveal flex flex-col justify-between gap-8 rounded-[2rem] bg-sand p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_24px_48px_-32px_rgba(43,37,33,0.3)] sm:p-8"
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
                 <figure>
@@ -314,7 +336,7 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="book" className="bg-sand py-20 sm:py-24" aria-labelledby="book-title">
+        <section id="book" className="glow bg-sand py-20 sm:py-24" aria-labelledby="book-title">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
             <div>
               <p className="eyebrow text-gold">Online booking</p>
@@ -373,7 +395,7 @@ export default function Home() {
             <div className="reveal">
               <p className="eyebrow text-gold">Find us</p>
               <h2 className="heading mt-3 text-5xl sm:text-6xl">Visit Luna</h2>
-              <div className="mt-8 overflow-hidden rounded-[2rem] border border-rule bg-panel">
+              <div className="surface mt-8 overflow-hidden rounded-[2rem]">
                 <StreetMap />
                 <address className="grid gap-1 p-6 not-italic sm:p-8">
                   <span className="heading text-2xl">{CONTACT.street}</span>

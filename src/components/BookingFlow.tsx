@@ -124,7 +124,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
     return (
       <section
         aria-live="polite"
-        className="self-start rounded-[2rem] border border-rule bg-panel p-8 shadow-[0_20px_50px_-30px_rgba(43,37,33,0.35)] lg:sticky lg:top-28"
+        className="surface self-start rounded-[2rem] p-8 lg:sticky lg:top-28"
       >
         <span className="grid h-12 w-12 place-items-center rounded-full bg-sage-soft text-xl text-sage" aria-hidden="true">
           ✓
@@ -153,7 +153,7 @@ export default function BookingFlow({ services }: { services: Service[] }) {
     <form
       onSubmit={submit}
       noValidate
-      className="self-start rounded-[2rem] border border-rule bg-panel p-6 shadow-[0_20px_50px_-30px_rgba(43,37,33,0.35)] sm:p-8 lg:sticky lg:top-28"
+      className="surface self-start rounded-[2rem] p-6 sm:p-8 lg:sticky lg:top-28"
     >
       <p className="mb-7 rounded-2xl border border-sand-deep bg-sand/60 px-4 py-3 text-sm text-muted">
         This is a demo. Please use made-up details, not your real name, email or phone number.
