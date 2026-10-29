@@ -9,6 +9,7 @@ A website where a salon's customers book an appointment themselves, any time of 
 <p>
   <img src="docs/screenshots/mobile-home.png" alt="Home page on a phone" width="240">
   <img src="docs/screenshots/mobile-booking.png" alt="Choosing a day and a free time on a phone" width="240">
+  <img src="docs/screenshots/mobile-home-dark.png" alt="Home page in the dark theme" width="240">
 </p>
 <img src="docs/screenshots/admin.png" alt="Admin panel with upcoming bookings" width="740">
 
@@ -113,7 +114,7 @@ Salon name, timezone, opening hours, slot step, booking window and the service l
 
 ### Design notes
 
-Style: oversized-type minimalism with a bento layout. Palette: plum `#38205a`, lilac `#cbb8f0`, mist `#f1eff6`, with marigold `#f4b63a` reserved for calls to action and the selected time. Font: Bricolage Grotesque (variable, self-hosted via `@fontsource-variable`). It covers Latin and Latin Extended (Polish letters work) but not Cyrillic; add a second font before localising to Ukrainian.
+Style: calm, editorial minimalism with plenty of white space. Palette: warm cream `#f7f3ed` and sand `#efe7dc` surfaces, espresso ink `#2b2521`, muted sage `#56634f` for calls to action and the selected time, with a soft gold `#b38f63` for small accents. Fonts: Cormorant Garamond for headings and Manrope for text (both variable, self-hosted via `@fontsource-variable`). Both cover Latin, Latin Extended (Polish) and Cyrillic (Ukrainian), so the site is ready for localisation. A dark theme follows the visitor's system setting, and a button in the header switches it by hand (the choice is remembered on the device). The page tells the (invented) story of the salon and shows off a few interactive pieces: a live "next free time" badge that asks the booking API, numbers that count up on scroll, a two-question service finder that picks the service in the booking form, a team section, reviews, an FAQ and a hand-drawn SVG map. Brand copy lives in `src/lib/brand.ts`, so a real salon's story can replace it in one place. The services section is a 3D carousel: the cards stand on a ring, the chosen one in front and its neighbours turned away into the background. It turns on its own every few seconds, pauses on hover or focus, has a stop button, and stays still for visitors who ask their system for reduced motion.
 
 ### Not included yet
 

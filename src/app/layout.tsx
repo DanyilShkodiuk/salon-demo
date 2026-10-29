@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/bricolage-grotesque/wdth.css";
+import "@fontsource-variable/cormorant-garamond/wght.css";
+import "@fontsource-variable/manrope/wght.css";
 import "./globals.css";
+import { THEME_SCRIPT } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "Luna Hair Studio | Book online",
@@ -10,12 +12,19 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#38205a",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f3ed" },
+    { media: "(prefers-color-scheme: dark)", color: "#1b1815" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // The theme script sets data-theme before React hydrates, so the attribute differs on purpose.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-screen">{children}</body>
     </html>
   );
