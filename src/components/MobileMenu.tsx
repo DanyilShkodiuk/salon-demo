@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 
-/** Section links for screens too narrow for the inline nav: a button that drops a panel under the header. */
+/** Section links for phones, where the header is too narrow for the inline nav: a button that drops a panel under the header. */
 export default function MobileMenu({ links }: { links: readonly (readonly [string, string])[] }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    const onResize = () => window.matchMedia("(min-width: 64rem)").matches && setOpen(false);
+    const onResize = () => window.matchMedia("(min-width: 48rem)").matches && setOpen(false);
     window.addEventListener("keydown", onKey);
     window.addEventListener("resize", onResize);
     return () => {
@@ -19,7 +19,7 @@ export default function MobileMenu({ links }: { links: readonly (readonly [strin
   }, [open]);
 
   return (
-    <div className="lg:hidden">
+    <div className="md:hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
