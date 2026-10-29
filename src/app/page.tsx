@@ -45,11 +45,11 @@ export default function Home() {
           <a href="#top" className="flex min-w-0 items-center gap-2.5">
             <Crescent className="h-6 w-6 shrink-0 text-gold" />
             <span className="heading text-2xl leading-none">Luna</span>
-            <span className="eyebrow hidden pt-1 text-muted min-[400px]:inline">Hair Studio</span>
+            <span className="eyebrow hidden pt-1 text-muted min-[400px]:inline md:hidden lg:inline">Hair Studio</span>
           </a>
-          <div className="flex shrink-0 items-center gap-2 text-sm min-[400px]:gap-3 md:gap-6">
+          <div className="flex shrink-0 items-center gap-2 text-sm min-[400px]:gap-3 md:gap-5 lg:gap-6">
             {NAV.map(([label, href]) => (
-              <a key={href} href={href} className="hidden text-muted hover:text-ink lg:inline">
+              <a key={href} href={href} className="hidden text-muted hover:text-ink md:inline">
                 {label}
               </a>
             ))}
