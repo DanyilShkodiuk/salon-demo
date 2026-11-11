@@ -47,7 +47,7 @@ Most small salons take bookings by phone, Instagram messages or a paper diary. T
 
 This works for any business that sells time: hair and beauty salons, barbers, nail studios, massage therapists, tutors, consultants. I can adapt it to your services, brand colours and language, add email or SMS reminders, and put it live on your own domain.
 
-Contact: [Danyil Shkodiuk on GitHub](https://github.com/DanyilShkodiuk)
+Contact: [danyil.shkodiuk14@gmail.com](mailto:danyil.shkodiuk14@gmail.com) · [LinkedIn](https://www.linkedin.com/in/danyil-shkodiuk/) · [GitHub](https://github.com/DanyilShkodiuk)
 
 ---
 
