@@ -16,12 +16,12 @@ export default function LoginForm() {
         type="password"
         autoComplete="current-password"
         required
-        className="w-full rounded-xl border border-rule bg-white px-4 py-3"
+        className="w-full rounded-xl border border-rule bg-field px-4 py-3 focus:border-sage"
       />
       <button
         type="submit"
         disabled={pending}
-        className="mt-4 rounded-full bg-plum px-6 py-3 font-medium text-mist hover:bg-plum-deep disabled:opacity-50"
+        className="mt-4 rounded-full bg-sage px-6 py-3 font-semibold text-on-sage transition-colors hover:bg-sage-deep disabled:opacity-50"
       >
         {pending ? "Checking…" : "Sign in"}
       </button>

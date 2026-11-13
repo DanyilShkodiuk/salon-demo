@@ -1,69 +1,277 @@
 @import "tailwindcss";
 
+/* `dark:` utilities follow the theme set on <html> by the script in layout.tsx. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Calm, warm neutrals with a muted sage accent. Contrast pairs checked for WCAG AA:
+   ink/muted on cream and panel, white on sage, cream on ink. */
 @theme {
-  --color-ink: #17122a;
-  --color-mist: #f1eff6;
-  --color-panel: #ffffff;
-  --color-plum: #38205a;
-  --color-plum-deep: #281542;
-  --color-lilac: #cbb8f0;
-  --color-lilac-soft: #e7def8;
-  --color-marigold: #f4b63a;
-  --color-rule: #d9d3e6;
-  --color-muted: #5a5272;
-  --color-alert: #a3342b;
-  --color-lichen: #2f6b4f;
-  --font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, sans-serif;
+  --color-ink: #2b2521;
+  --color-cream: #f7f3ed;
+  --color-panel: #fffdf9;
+  --color-sand: #efe7dc;
+  --color-sand-deep: #e4d8c8;
+  --color-rule: #e1d6c8;
+  --color-muted: #6b6058;
+  --color-sage: #56634f;
+  --color-sage-deep: #434e3d;
+  --color-sage-soft: #e6eadf;
+  --color-gold: #b38f63;
+  --color-on-sage: #ffffff;
+  --color-field: #ffffff;
+  --color-night: #e8ddcd;
+  --color-night-text: #2b2521;
+  --color-alert: #9b3b2f;
+  --color-alert-soft: #f3dedb;
+  --color-success: #3f6446;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --font-serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman",
+    serif;
+}
+
+/* Dark theme: the same warm palette, lowered into espresso tones. The sage accent turns
+   lighter, so text on it turns dark. Applied when the visitor picks it, or by default when
+   their system is dark (the media query covers the moment before the theme script runs). */
+:root[data-theme="dark"] {
+  --color-ink: #ede6dc;
+  --color-cream: #1b1815;
+  --color-panel: #23201b;
+  --color-sand: #2a2520;
+  --color-sand-deep: #3a332b;
+  --color-rule: #39332c;
+  --color-muted: #b3a798;
+  --color-sage: #9aab8e;
+  --color-sage-deep: #b2c1a6;
+  --color-sage-soft: #2c3329;
+  --color-gold: #cdab7f;
+  --color-on-sage: #1b1815;
+  --color-field: #1e1b17;
+  --color-night: #131110;
+  --color-night-text: #ede6dc;
+  --color-alert: #e8948a;
+  --color-alert-soft: #3d2622;
+  --color-success: #a7c8a9;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-ink: #ede6dc;
+    --color-cream: #1b1815;
+    --color-panel: #23201b;
+    --color-sand: #2a2520;
+    --color-sand-deep: #3a332b;
+    --color-rule: #39332c;
+    --color-muted: #b3a798;
+    --color-sage: #9aab8e;
+    --color-sage-deep: #b2c1a6;
+    --color-sage-soft: #2c3329;
+    --color-gold: #cdab7f;
+    --color-on-sage: #1b1815;
+    --color-field: #1e1b17;
+    --color-night: #131110;
+    --color-night-text: #ede6dc;
+    --color-alert: #e8948a;
+    --color-alert-soft: #3d2622;
+    --color-success: #a7c8a9;
+    color-scheme: dark;
+  }
 }
 
 html {
-  color-scheme: light;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 6rem;
+}
+
+html:not([data-theme="dark"]) {
+  color-scheme: light;
 }
 
 body {
-  background: var(--color-mist);
+  background: var(--color-cream);
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
-  --focus: var(--color-plum);
+  --focus: var(--color-sage);
 }
 
-/* Dark surfaces switch the focus ring to a colour that stays visible there. */
-.on-dark {
-  --focus: var(--color-marigold);
+/* The stats card and footer are "sheets" in the night colour: deeper sand in the light
+   theme, near-black in the dark one. On the light sheet gold darkens to stay readable;
+   on the dark one the focus ring switches to a colour that stays visible there. */
+html:not([data-theme="dark"]) .sheet {
+  --color-gold: #8a6a42;
+}
+[data-theme="dark"] .sheet {
+  --focus: var(--color-sand-deep);
 }
 
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* Display type: compressed, heavy, tightly set. */
-.display {
-  font-weight: 800;
-  font-stretch: 75%;
-  letter-spacing: -0.035em;
-  line-height: 0.82;
+/* ---- Depth ---------------------------------------------------------------------------
+   Four layers keep the page from feeling flat: a fine film grain over everything, slow
+   "aurora" glow fixed behind the whole page, frosted-glass cards that let the glow show through,
+   and thin orbit lines that echo the moon in the logo. */
+
+/* Film grain: SVG noise tiled over the whole page. Never blocks clicks. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] body::after {
+  opacity: 0.09;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.9 0 0 0 0 0.86 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.heading {
-  font-weight: 700;
-  font-stretch: 85%;
-  letter-spacing: -0.02em;
+/* Aurora: large blurred colour fields that drift slowly behind a section. */
+.aurora {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* A sand band that fades in and out instead of starting at a hard edge. */
+.fade-band {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-sand) 14rem,
+    var(--color-sand) calc(100% - 14rem),
+    transparent
+  );
+}
+.aurora > span {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.aurora > span:nth-child(1) {
+  background: var(--color-sand-deep);
+  top: -18vmax;
+  left: -10vmax;
+}
+.aurora > span:nth-child(2) {
+  background: var(--color-sage-soft);
+  top: 10%;
+  right: -16vmax;
+  animation-duration: 32s;
+  animation-delay: -8s;
+  opacity: 0.8;
+}
+.aurora > span:nth-child(3) {
+  background: color-mix(in oklab, var(--color-gold) 35%, transparent);
+  bottom: -24vmax;
+  left: 30%;
+  animation-duration: 38s;
+  animation-delay: -16s;
+}
+[data-theme="dark"] .aurora > span {
+  opacity: 0.35;
+}
+[data-theme="dark"] .aurora > span:nth-child(2) {
+  opacity: 0.6;
+}
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6vmax, 3vmax, 0) scale(1.12);
+  }
+  to {
+    transform: translate3d(-4vmax, 6vmax, 0) scale(0.95);
+  }
+}
+
+/* A soft warm glow from the top edge of a dark surface. */
+.glow-gold {
+  background-image: radial-gradient(40rem 18rem at 50% 0%, color-mix(in oklab, var(--color-gold) 22%, transparent), transparent 75%);
+}
+
+/* Frosted glass card: translucent, blurred backdrop, a lit top edge and a soft drop shadow. */
+.surface {
+  background: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--color-panel) 88%, transparent),
+    color-mix(in oklab, var(--color-panel) 62%, transparent)
+  );
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  backdrop-filter: blur(16px) saturate(1.15);
+  border: 1px solid color-mix(in oklab, var(--color-rule) 70%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
+    0 1px 2px rgba(43, 37, 33, 0.04),
+    0 24px 48px -32px rgba(43, 37, 33, 0.35);
+}
+[data-theme="dark"] .surface {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
+/* Thin concentric rings, like orbits around the moon. */
+.orbits {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  background: repeating-radial-gradient(
+    circle,
+    transparent 0 46px,
+    color-mix(in oklab, var(--color-gold) 30%, transparent) 46px 47px
+  );
+  /* Fades out inside its own box, so the rings never end at a hard edge. */
+  -webkit-mask-image: radial-gradient(circle closest-side, black 35%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, black 35%, transparent 100%);
+}
+
+/* Display type: a light, high-contrast serif, set generously. */
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
   line-height: 1.02;
 }
 
-/* The one orchestrated moment: the wordmark rises into place once on load. */
+.heading {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.1;
+}
+
+/* Small spaced capitals for labels above headings. */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* The one orchestrated moment: the hero text fades up once on load. */
 @keyframes rise {
   from {
-    transform: translateY(18%);
+    transform: translateY(12px);
     opacity: 0;
   }
   to {
@@ -72,15 +280,100 @@ body {
   }
 }
 .rise {
-  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Sections fade up as they scroll into view. Only hidden once the observer is running
+   (ScrollReveal adds .reveal-ready), so content never stays invisible without JavaScript. */
+.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Quick entrance for content that swaps in place (quiz steps, live badge). */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.fade-in {
+  animation: fade-in 0.5s ease both;
+}
+
+/* The pin on the contact map breathes gently. */
+@keyframes map-pulse {
+  0%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.35;
+  }
+}
+.map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 2.6s ease-in-out infinite;
+}
+
+/* FAQ answers slide open. */
+.faq[open] > p {
+  animation: fade-in 0.4s ease both;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Card width and ring radius for the services carousel (eight cards, 45° apart). Above
+   about 1.21 × width the side cards stay fully behind the front one; closer, they cut
+   through its plane and Chrome drops them on narrow screens. */
+.ring-stage {
+  --ring-w: min(64vw, 22rem);
+  --ring-r: calc(var(--ring-w) * 1.32);
+}
+
+/* Fills the active carousel dot while the current card is on show. */
+@keyframes carousel-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+.carousel-progress {
+  animation-name: carousel-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .rise {
+  .aurora > span {
     animation: none;
+  }
+  .rise,
+  .carousel-progress,
+  .fade-in,
+  .map-pulse,
+  .faq[open] > p {
+    animation: none;
+  }
+  .reveal-ready .reveal {
+    opacity: 1;
+    transform: none;
   }
   * {
     transition: none !important;

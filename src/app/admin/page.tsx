@@ -12,9 +12,9 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Bookings | Luna Hair Studio", robots: { index: false } };
 
 const STATUS_STYLE: Record<string, string> = {
-  pending: "bg-lilac-soft text-plum",
-  confirmed: "bg-[#dcefe4] text-lichen",
-  cancelled: "bg-[#f3dedb] text-alert line-through",
+  pending: "bg-sand text-ink",
+  confirmed: "bg-sage-soft text-success",
+  cancelled: "bg-alert-soft text-alert line-through",
 };
 
 export default async function AdminPage() {
@@ -25,7 +25,8 @@ export default async function AdminPage() {
   if (!authed) {
     return (
       <main className="mx-auto max-w-3xl px-5 py-16">
-        <h1 className="heading text-5xl">Staff login</h1>
+        <p className="eyebrow text-gold">Luna Hair Studio</p>
+        <h1 className="heading mt-3 text-5xl">Staff login</h1>
         <p className="mt-3 text-muted">Sign in to see and confirm bookings.</p>
         {demo && <DemoLoginForm />}
         {!demo && <LoginForm />}
@@ -46,13 +47,16 @@ export default async function AdminPage() {
   return (
     <main className="mx-auto max-w-5xl px-5 py-12">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="heading text-5xl">Bookings</h1>
+        <div>
+          <p className="eyebrow text-gold">Luna Hair Studio</p>
+          <h1 className="heading mt-3 text-5xl">Bookings</h1>
+        </div>
         <form action={logout}>
           <button className="text-sm underline underline-offset-4">Sign out</button>
         </form>
       </div>
       {demo && (
-        <p className="mt-4 rounded-xl bg-lilac-soft px-4 py-3 text-sm">
+        <p className="mt-4 rounded-xl border border-sand-deep bg-sand/60 px-4 py-3 text-sm text-muted">
           Demo mode: anyone can open this page, so surnames and contacts are masked. Try confirming or
           cancelling a booking.
         </p>
@@ -117,7 +121,7 @@ function StatusButton({ id, status, label }: { id: string; status: string; label
     <form action={setStatus}>
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="status" value={status} />
-      <button className="rounded-full border border-rule px-4 py-1.5 text-sm hover:border-plum">
+      <button className="rounded-full border border-rule px-4 py-1.5 text-sm transition-colors hover:border-sage">
         {label}
       </button>
     </form>
